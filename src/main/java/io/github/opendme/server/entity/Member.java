@@ -2,8 +2,5 @@ package io.github.opendme.server.entity;
 
 import java.util.List;
 
-public class Member {
-    Long id;
-    String name;
-    List<String> skills;
+public record Member(Long id, Long departmentId, String name, List<Skill> skills) {
 }

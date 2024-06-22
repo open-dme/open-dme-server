@@ -2,9 +2,5 @@ package io.github.opendme.server.entity;
 
 import java.util.Map;
 
-public class Vehicle {
-    Long id;
-    String name;
-    Integer seats;
-    Map<String, Integer> requiredSkills;
+public record Vehicle(Long id, String name, Integer seats, Map<Skill, Integer> requiredSkills) {
 }

@@ -19,6 +19,8 @@ services:
     image: postgres
     environment:
       POSTGRES_PASSWORD: "samplepw"
+      POSTGRES_USER: "sampleuser"
+      POSTGRES_DB: "sample"
   cache:
     image: redis
 

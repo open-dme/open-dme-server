@@ -1,0 +1,26 @@
+services:
+  open-dme:
+    image: open-dme-server
+    build:
+      context: ..
+      dockerfile: docker/open_dms.dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - "./config/application.yml:/app/applications.yml:ro"
+  keycloak:
+    image: quay.io/keycloak/keycloak
+    ports:
+      - "9080:8080"
+    environment:
+      KEYCLOAK_ADMIN: "admin"
+      KEYCLOAK_ADMIN_PASSWORD: "admin"
+  database:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: "samplepw"
+      POSTGRES_USER: "sampleuser"
+      POSTGRES_DB: "sample"
+  cache:
+    image: redis
+

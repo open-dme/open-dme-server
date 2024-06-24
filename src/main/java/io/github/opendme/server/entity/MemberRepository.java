@@ -1,8 +1,9 @@
 package io.github.opendme.server.entity;
 
-import org.springframework.data.repository.reactive.ReactiveCrudRepository;
-import reactor.core.publisher.Flux;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface MemberRepository extends ReactiveCrudRepository<Member, Long> {
-    Flux<Member> findAllByDepartmentId(Long departmentId);
+import java.util.List;
+
+public interface MemberRepository extends JpaRepository<Member, Long> {
+    List<Member> findAllByDepartmentId(Long departmentId);
 }

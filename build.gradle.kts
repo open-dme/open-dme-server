@@ -1,38 +1,40 @@
 plugins {
-	java
-	id("org.springframework.boot")  version "3.3.1"
-	id("io.spring.dependency-management") version "1.1.5"
-	kotlin("jvm") version "2.0.0"
+    java
+    alias(libs.plugins.spring.boot)
+    alias(libs.plugins.spring.dependencymanagement)
 }
 
 group = "io.github.opendme"
 version = "0.0.1-SNAPSHOT"
 
 java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(22)
-	}
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(22)
+    }
 }
 
 repositories {
-	mavenCentral()
+    mavenCentral()
 }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.boot:spring-boot-starter-web")
+    runtimeOnly(libs.driver.postgres)
+    implementation("org.springframework.boot:spring-boot-starter-actuator")
+    implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+    testImplementation(testlibs.bundles.database.postgres)
 }
 
 tasks {
-	test {
-		useJUnitPlatform()
-	}
-	named<Jar>("jar") {
-		enabled = false
-	}
+    test {
+        useJUnitPlatform()
+    }
+    named<Jar>("jar") {
+        enabled = false
+    }
 }

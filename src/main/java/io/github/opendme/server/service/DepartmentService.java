@@ -1,8 +1,8 @@
 package io.github.opendme.server.service;
 
 import io.github.opendme.server.entity.Department;
-import io.github.opendme.server.repository.DepartmentRepository;
-import io.github.opendme.server.repository.MemberRepository;
+import io.github.opendme.server.entity.DepartmentRepository;
+import io.github.opendme.server.entity.MemberRepository;
 import org.springframework.stereotype.Service;
 
 @Service

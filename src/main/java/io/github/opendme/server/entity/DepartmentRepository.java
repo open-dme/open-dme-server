@@ -1,6 +1,5 @@
-package io.github.opendme.server.repository;
+package io.github.opendme.server.entity;
 
-import io.github.opendme.server.entity.Department;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DepartmentRepository extends JpaRepository<Department, Long> {

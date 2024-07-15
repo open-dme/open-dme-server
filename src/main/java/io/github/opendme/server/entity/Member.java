@@ -1,16 +1,21 @@
 package io.github.opendme.server.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 public record Member(
         @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(nullable = false)
         Long id,
-        Long departmentId,
+        @ManyToOne(optional = false)
+        @JoinColumn(nullable = false)
+        Department department,
         String name,
-        List<Skill> skills,
+        @ManyToMany
+        @JoinTable
+        Set<Skill> skills,
         String email) {
 }

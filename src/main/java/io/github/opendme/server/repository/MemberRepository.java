@@ -1,5 +1,6 @@
-package io.github.opendme.server.entity;
+package io.github.opendme.server.repository;
 
+import io.github.opendme.server.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

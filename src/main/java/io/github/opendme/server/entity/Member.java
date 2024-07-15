@@ -11,5 +11,6 @@ public record Member(
         Long id,
         Long departmentId,
         String name,
-        List<Skill> skills) {
+        List<Skill> skills,
+        String email) {
 }

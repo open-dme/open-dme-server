@@ -16,12 +16,13 @@ public class DepartmentService {
     }
 
     public Department create(Department department) {
-        if (adminExists(department))
-            return departmentRepository.save(department);
-        return null;
+        createAdminIfNeeded(department);
+        return departmentRepository.save(department);
     }
 
-    private boolean adminExists(Department department) {
-        return memberRepository.existsById(department.adminId());
+    private void createAdminIfNeeded(Department department) {
+        //TODO: does admin already get saved by departmentRepository.save()?
+        if (!memberRepository.existsById(department.admin().id()))
+            memberRepository.save(department.admin());
     }
 }

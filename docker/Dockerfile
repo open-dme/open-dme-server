@@ -1,9 +1,9 @@
-FROM docker.io/gradle:jdk22-alpine as build
+FROM docker.io/gradle:jdk22-alpine AS build
 
 COPY . .
 RUN gradle clean build --no-daemon
 
-FROM docker.io/eclipse-temurin:22-jre as runtime
+FROM docker.io/eclipse-temurin:22-jre AS runtime
 
 RUN adduser -uid 1001 --system apprunner && addgroup -gid 1000 --system runnergroup && addgroup apprunner runnergroup
 USER apprunner

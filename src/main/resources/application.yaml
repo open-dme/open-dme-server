@@ -18,8 +18,8 @@ spring:
       client:
         registration:
           open-dme:
-            client-id: YOUR_CLIENT_ID_HERE
-            client-secret: YOUR_CLIENT_SECRET_HERE
+            client-id: "open-dme"
+            client-secret: U57todoX9MWXlr2irfa51cCdJfGGwxPZ
             scope:
               - openid
               - profile

@@ -17,20 +17,22 @@ spring:
     oauth2:
       client:
         registration:
-          discord:
-            provider: discord
+          open-dme:
             client-id: YOUR_CLIENT_ID_HERE
-            client-secret: YOUR_CLIENT_SECRET_HERE
-            client-authentication-method: post
-            authorization-grantType: authorization_code
             scope:
-              - identify
-            redirect-uri: "{baseScheme}://{baseHost}{basePort}{basePath}/login/oauth2/code/discord"
-            client-name: Discord
+              - openid
+              - profile
+            client-secret: YOUR_CLIENT_SECRET_HERE
+            authorization-grantType: authorization_code
+            redirect-uri: "${keycloak.base-path}/login/oauth2/code/discord"
         provider:
-          discord:
-            authorization-uri: https://discordapp.com/api/oauth2/authorize
-            token-uri: https://discordapp.com/api/oauth2/token
-            user-info-uri: https://discordapp.com/api/users/@me
-            user-name-attribute: username
+          open-dme:
+            token-uri: ${keycloak.base-path}/protocol/openid-connect/token
+            authorization-uri: ${keycloak.base-path}/protocol/openid-connect/auth
+            user-name-attribute: preferred_username
+            jwk-set-uri: ${keycloak.base-path}/protocol/openid-connect/certs
 
+keycloak:
+  base-url: "http://0.0.0.0:8080"
+  realm: "open-dme"
+  base-path: ${keycloak.base-url}/auth/realms/${keycloak.realm}

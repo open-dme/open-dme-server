@@ -19,10 +19,10 @@ spring:
         registration:
           open-dme:
             client-id: YOUR_CLIENT_ID_HERE
+            client-secret: YOUR_CLIENT_SECRET_HERE
             scope:
               - openid
               - profile
-            client-secret: YOUR_CLIENT_SECRET_HERE
             authorization-grantType: authorization_code
             redirect-uri: "${keycloak.base-path}/login/oauth2/code/discord"
         provider:

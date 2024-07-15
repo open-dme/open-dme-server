@@ -18,13 +18,13 @@ spring:
       client:
         registration:
           open-dme:
-            client-id: YOUR_CLIENT_ID_HERE
-            client-secret: YOUR_CLIENT_SECRET_HERE
+            client-id: "open-dme"
+            client-secret: U57todoX9MWXlr2irfa51cCdJfGGwxPZ
             scope:
               - openid
               - profile
             authorization-grantType: authorization_code
-            redirect-uri: "${keycloak.base-path}/login/oauth2/code/discord"
+            redirect-uri: "{baseScheme}://{baseHost}{basePort}/login/oauth2/code/open-dme"
         provider:
           open-dme:
             token-uri: ${keycloak.base-path}/protocol/openid-connect/token

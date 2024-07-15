@@ -1,0 +1,69 @@
+spring:
+  application:
+    name: server
+  datasource:
+    url: "jdbc:postgresql://database/db"
+    username: postgres
+    password: changeme
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          discord:
+            provider: discord
+            client-id: YOUR_CLIENT_ID_HERE
+            client-secret: YOUR_CLIENT_SECRET_HERE
+            client-authentication-method: post
+            authorization-grantType: authorization_code
+            scope:
+              - identify
+            redirect-uri: "{baseScheme}://{baseHost}{basePort}{basePath}/login/oauth2/code/discord"
+            client-name: Discord
+        provider:
+          discord:
+            authorization-uri: https://discordapp.com/api/oauth2/authorize
+            token-uri: https://discordapp.com/api/oauth2/token
+            user-info-uri: https://discordapp.com/api/users/@me
+            user-name-attribute: username
+
+oauth:
+  registration-to-user-resolver-type:
+    mapping:
+      discord: "discord"
+      gitlab: "gitlab"
+      gitlab2: "gitlab"
+
+discord-bot:
+  token: "letmein"
+  baseUrl: "http://0.0.0.0/game-jam/"
+
+
+---
+
+spring:
+  jpa:
+    properties:
+      hibernate:
+        dialect: "org.hibernate.dialect.H2Dialect"
+        hbm2ddl: create
+  datasource:
+    url: "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1"
+    username: user
+    password: password
+    driver-class-name: "org.h2.Driver"
+  config:
+    activate:
+      on-profile: local
+
+  security:
+    user:
+      name: "test"
+      password: "test"

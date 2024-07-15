@@ -2,9 +2,9 @@ spring:
   application:
     name: server
   datasource:
-    url: "jdbc:postgresql://database/db"
+    url: "jdbc:postgresql://database/postgres"
     username: postgres
-    password: changeme
+    password: postgres
     driver-class-name: org.postgresql.Driver
   jpa:
     properties:

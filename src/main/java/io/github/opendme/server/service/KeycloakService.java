@@ -2,18 +2,20 @@ package io.github.opendme.server.service;
 
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.admin.client.resource.RealmResource;
+import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
+import javax.ws.rs.core.Response;
 import java.util.Collections;
 import java.util.List;
 
 @Service
 public class KeycloakService {
-    @Value("{$keycloak.realm}")
+    @Value("${keycloak.realm}")
     private String realm;
 
     @Autowired
@@ -30,6 +32,14 @@ public class KeycloakService {
                 .group("admin")
                 .members();
         return Collections.emptyList();
+    }
+
+    public void createGroup(String group) {
+        GroupRepresentation rep = new GroupRepresentation();
+        rep.setName("admin");
+        Response add = realm()
+                .groups()
+                .add(rep);
     }
 
     private RealmResource realm() {

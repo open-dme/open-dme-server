@@ -9,23 +9,23 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class KeycloakConfig {
-    @Value("{$keycloak.realm}")
+    @Value("${keycloak.realm}")
     private String realm;
-    @Value("{$keycloak.password}")
-    private String password;
-    @Value("{$keycloak.username}")
-    private String username;
+    @Value("${keycloak.client.id}")
+    private String clientId;
+    @Value("${keycloak.client.secret}")
+    private String clientSecret;
 
 
     @Bean
     public Keycloak keycloak() {
-                return KeycloakBuilder.builder()
+        var builder = KeycloakBuilder.builder()
                 .serverUrl(System.getenv("KEYCLOAK_URL"))
                 .realm(realm)
-                .clientId("admin-cli")
-                .grantType(OAuth2Constants.PASSWORD)
-                .username(username)
-                .password(password)
+
+                .grantType(OAuth2Constants.CLIENT_SECRET)
+                .clientId(clientId)
+                .clientSecret(clientSecret)
                 .build();
     }
 }

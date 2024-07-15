@@ -3,6 +3,7 @@ services:
     image: open-dme-server
     build:
       context: ..
+      dockerfile: ./docker/Dockerfile
     ports:
       - "8080:8080"
     volumes:

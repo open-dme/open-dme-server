@@ -15,6 +15,16 @@ services:
     environment:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
+      KC_FEATURES:
+      # KC_DB: "postgres"
+      # KC_DB_USERNAME: "postgres"
+      # KC_DB_PASSWORD: "postgres"
+      # KC_DB_URL: jdbc:postgresql://localhost/keycloak
+    command:
+      - start-dev
+      # - start
+      # - --optimized
+      # - --hostname-port=3000
   database:
     image: postgres
     environment:

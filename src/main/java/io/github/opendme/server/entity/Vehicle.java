@@ -11,6 +11,5 @@ public record Vehicle(
         @Column(nullable = false)
         Long id,
         String name,
-        Integer seats,
-        Map<Skill, Integer> requiredSkills) {
+        Integer seats) {
 }

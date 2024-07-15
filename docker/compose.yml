@@ -1,6 +1,6 @@
 services:
   open-dme:
-    image: open-dme-server
+    image: ghcr.io/open-dme/open-dme-server
     build:
       context: ..
       dockerfile: ./docker/Dockerfile

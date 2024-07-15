@@ -34,36 +34,3 @@ spring:
             user-info-uri: https://discordapp.com/api/users/@me
             user-name-attribute: username
 
-oauth:
-  registration-to-user-resolver-type:
-    mapping:
-      discord: "discord"
-      gitlab: "gitlab"
-      gitlab2: "gitlab"
-
-discord-bot:
-  token: "letmein"
-  baseUrl: "http://0.0.0.0/game-jam/"
-
-
----
-
-spring:
-  jpa:
-    properties:
-      hibernate:
-        dialect: "org.hibernate.dialect.H2Dialect"
-        hbm2ddl: create
-  datasource:
-    url: "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1"
-    username: user
-    password: password
-    driver-class-name: "org.h2.Driver"
-  config:
-    activate:
-      on-profile: local
-
-  security:
-    user:
-      name: "test"
-      password: "test"

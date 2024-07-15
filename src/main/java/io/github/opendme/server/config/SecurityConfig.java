@@ -29,6 +29,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+                // todo make it secure again
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .logout(logout -> {
@@ -82,19 +83,6 @@ public class SecurityConfig {
 
         return service;
     }
-
-
-
-
-   /* @Bean
-    CorsConfigurationSource corsConfigurationSource() {
-        CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:8080", "http://0.0.0.0:8080", "*"));
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
-        return source;
-    }
-    */
 
     private RequestEntity<?> addUserAgentHeader(RequestEntity<?> request) {
         HttpHeaders headers = new HttpHeaders();

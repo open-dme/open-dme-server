@@ -2,6 +2,7 @@ plugins {
     java
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependencymanagement)
+    kotlin("jvm") version "2.0.0"
 }
 
 group = "io.github.opendme"

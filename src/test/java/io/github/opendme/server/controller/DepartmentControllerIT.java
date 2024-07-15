@@ -54,7 +54,7 @@ class DepartmentControllerIT {
     @WithMockUser
     void should_create_department_on_call() throws Exception {
         Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
-        Long adminId = memberRepository.save(admin).id();
+        Long adminId = memberRepository.save(admin).getId();
 
         DepartmentDto departmentDto = new DepartmentDto("Capitol-Außenstelle", adminId);
         ObjectMapper mapper = new ObjectMapper();

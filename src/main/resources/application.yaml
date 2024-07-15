@@ -24,7 +24,7 @@ spring:
               - openid
               - profile
             authorization-grantType: authorization_code
-            redirect-uri: "${keycloak.base-path}/login/oauth2/code/discord"
+            redirect-uri: "{baseScheme}://{baseHost}{basePort}/login/oauth2/code/open-dme"
         provider:
           open-dme:
             token-uri: ${keycloak.base-path}/protocol/openid-connect/token

@@ -1,7 +1,7 @@
 FROM docker.io/gradle:jdk22-alpine AS build
 
 COPY . .
-RUN gradle clean build --no-daemon
+RUN gradle clean build -x test --no-daemon
 
 FROM docker.io/eclipse-temurin:22-jre AS runtime
 

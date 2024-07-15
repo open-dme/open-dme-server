@@ -1,0 +1,38 @@
+spring:
+  application:
+    name: server
+  datasource:
+    url: "jdbc:postgresql://database/postgres"
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+  security:
+    oauth2:
+      client:
+        registration:
+          open-dme:
+            client-id: "open-dme"
+            client-secret: U57todoX9MWXlr2irfa51cCdJfGGwxPZ
+            scope:
+              - openid
+              - profile
+            authorization-grantType: authorization_code
+            redirect-uri: "{baseScheme}://{baseHost}{basePort}/login/oauth2/code/open-dme"
+        provider:
+          open-dme:
+            token-uri: ${keycloak.base-path}/protocol/openid-connect/token
+            authorization-uri: ${keycloak.base-path}/protocol/openid-connect/auth
+            user-name-attribute: preferred_username
+            jwk-set-uri: ${keycloak.base-path}/protocol/openid-connect/certs
+
+keycloak:
+  base-url: "http://0.0.0.0:8080"
+  realm: "open-dme"
+  base-path: ${keycloak.base-url}/auth/realms/${keycloak.realm}

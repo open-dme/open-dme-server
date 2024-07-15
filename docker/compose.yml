@@ -3,9 +3,9 @@ services:
     build:
       context: ..
       dockerfile: ./docker/Dockerfile
-    profiles: []
+    profiles: [none]
     ports:
-      - "8080:8080"
+      - "8888:8080"
     volumes:
       - "./config/application.yml:/app/applications.yml:ro"
 
@@ -24,7 +24,7 @@ services:
 
   keycloak:
     image: quay.io/keycloak/keycloak
-    profiles: []
+    profiles: [none]
     ports:
       - "9080:8080"
     environment:
@@ -45,23 +45,27 @@ services:
     command:
       - start
       - --optimized
-      - --hostname-port=3000
+      - --hostname-port=8080
 
   keycloak-dev:
     extends:
       service: keycloak
     profiles:
       - dev
+      - local
     command:
       - start-dev
       - --verbose
 
   database:
     image: postgres
+    ports:
+      - 5433:5432
     environment:
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_USER: "postgres"
       POSTGRES_DB: "postgres"
+
   cache:
     image: redis
 

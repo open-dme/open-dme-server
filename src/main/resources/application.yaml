@@ -27,12 +27,18 @@ spring:
             redirect-uri: "{baseScheme}://{baseHost}{basePort}/login/oauth2/code/open-dme"
         provider:
           open-dme:
-            token-uri: ${keycloak.base-path}/protocol/openid-connect/token
-            authorization-uri: ${keycloak.base-path}/protocol/openid-connect/auth
+            token-uri: ${keycloak.realm-url}/protocol/openid-connect/token
+            authorization-uri: ${keycloak.realm-url}/protocol/openid-connect/auth
             user-name-attribute: preferred_username
-            jwk-set-uri: ${keycloak.base-path}/protocol/openid-connect/certs
+            jwk-set-uri: ${keycloak.realm-url}/protocol/openid-connect/certs
 
 keycloak:
-  base-url: "http://0.0.0.0:8080"
+  base-url: "http://keycloak:8080"
+  url: ${keycloak.base-url}/auth/
+  realm-url: ${keycloak.url}/realms/${keycloak.realm}
+  master-realm: "master"
   realm: "open-dme"
-  base-path: ${keycloak.base-url}/auth/realms/${keycloak.realm}
+  client-id: admin-cli
+  client-secret: 123456789
+  initialize-on-startup: false
+

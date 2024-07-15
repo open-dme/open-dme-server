@@ -52,8 +52,12 @@ services:
       service: keycloak
     profiles:
       - dev
+    volumes:
+      - ./keycloak/import:/opt/keycloak/data/import
     command:
       - start-dev
+      - --import-realm
+      - --verbose
 
   database:
     image: postgres

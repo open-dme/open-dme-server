@@ -7,27 +7,28 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@RunWith(SpringRunner.class)
+@SpringBootTest
+@AutoConfigureMockMvc
 class DepartmentControllerIT extends ServerApplicationTests {
 
+    @Autowired
     private MockMvc mvc;
 
     @Autowired
@@ -42,14 +43,11 @@ class DepartmentControllerIT extends ServerApplicationTests {
         departmentRepository.deleteAll();
         memberRepository.deleteAll();
 
-        mvc = MockMvcBuilders
-                .webAppContextSetup(context)
-                .apply(springSecurity())
-                .build();
+
     }
 
     @Test
-    @WithMockUser("spring")
+    @WithMockUser
     void should_create_department_on_call() throws Exception {
         Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
         Long adminId = memberRepository.save(admin).id();
@@ -62,6 +60,7 @@ class DepartmentControllerIT extends ServerApplicationTests {
 
         MvcResult result = mvc.perform(post("/department")
                                       .contentType(MediaType.APPLICATION_JSON)
+                                      .with(csrf())
                                       .content(requestJson))
                               .andExpect(status().isOk())
                               .andReturn();

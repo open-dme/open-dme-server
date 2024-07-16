@@ -15,7 +15,6 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFea
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class DepartmentControllerIT extends ITBase {
     @BeforeEach
@@ -31,6 +30,28 @@ class DepartmentControllerIT extends ITBase {
         Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
         Long adminId = memberRepository.save(admin).getId();
 
+        MvcResult result = sendCreateRequestWith(adminId);
+        assertThat(result.getResponse().getStatus()).isEqualTo(200);
+        assertThat(result.getResponse().getContentAsString()).contains("Capitol-Außenstelle");
+    }
+
+    @Test
+    @WithMockUser
+    void should_decline_empty_admin() throws Exception {
+
+        MvcResult result = sendCreateRequestWith(null);
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+    }
+
+    @Test
+    @WithMockUser
+    void should_decline_non_existing_admin() throws Exception {
+
+        MvcResult result = sendCreateRequestWith(666l);
+        assertThat(result.getResponse().getStatus()).isEqualTo(422);
+    }
+
+    private MvcResult sendCreateRequestWith(Long adminId) throws Exception {
         DepartmentDto departmentDto = new DepartmentDto("Capitol-Außenstelle", adminId);
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
@@ -38,12 +59,10 @@ class DepartmentControllerIT extends ITBase {
         String requestJson = ow.writeValueAsString(departmentDto);
 
         MvcResult result = mvc.perform(
-                                      post("/department")
-                                              .contentType(MediaType.APPLICATION_JSON)
-                                              .with(csrf())
-                                              .content(requestJson))
-                              .andExpect(status().isOk())
-                              .andReturn();
-        assertThat(result.getResponse().getContentAsString()).contains("Capitol-Außenstelle");
+                post("/department")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .with(csrf())
+                        .content(requestJson)).andReturn();
+        return result;
     }
 }

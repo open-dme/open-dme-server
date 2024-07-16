@@ -7,6 +7,7 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberRepository;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
+import org.springframework.util.ObjectUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Optional;
@@ -31,6 +32,8 @@ public class DepartmentService {
     }
 
     private Member fetchAdmin(DepartmentDto department) {
+        if (ObjectUtils.isEmpty(department.getAdminId()))
+            throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Admin may not be empty.");
         Optional<Member> admin = memberRepository.findById(department.getAdminId());
         if (admin.isEmpty())
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Could not fetch admin.");

@@ -15,11 +15,11 @@ public class GlobalBeans {
     @Bean
     public Keycloak keycloak() {
         return KeycloakBuilder.builder()
-                              .clientId(keycloakConfig.clientId())
-                              .clientSecret(keycloakConfig.clientSecret())
+                              .clientId(keycloakConfig.getClientId())
+                              .clientSecret(keycloakConfig.getClientSecret())
                               .authorization(OAuth2Constants.CLIENT_SECRET)
-                              .realm(keycloakConfig.realm())
-                              .serverUrl(keycloakConfig.url())
+                              .realm(keycloakConfig.getRealm())
+                              .serverUrl(keycloakConfig.getUrl())
                               .build();
     }
 }

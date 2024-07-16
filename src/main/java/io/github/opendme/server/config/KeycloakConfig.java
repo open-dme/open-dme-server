@@ -16,60 +16,60 @@ public class KeycloakConfig {
     private String clientSecret;
     private boolean initializeOnStartup;
 
-    public void baseUrl(String baseUrl) {
-        this.baseUrl = baseUrl;
-    }
-
-    public void url(String url) {
-        this.url = url;
-    }
-
-    public void masterRealm(String masterRealm) {
-        this.masterRealm = masterRealm;
-    }
-
-    public void realm(String realm) {
-        this.realm = realm;
-    }
-
-    public void clientId(String clientId) {
-        this.clientId = clientId;
-    }
-
-    public void clientSecret(String clientSecret) {
-        this.clientSecret = clientSecret;
-    }
-
-    public void initializeOnStartup(boolean initializeOnStartup) {
-        this.initializeOnStartup = initializeOnStartup;
-    }
-
-    public String baseUrl() {
+    public String getBaseUrl() {
         return baseUrl;
     }
 
-    public String url() {
+    public void setBaseUrl(String baseUrl) {
+        this.baseUrl = baseUrl;
+    }
+
+    public String getUrl() {
         return url;
     }
 
-    public String masterRealm() {
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getMasterRealm() {
         return masterRealm;
     }
 
-    public String realm() {
+    public void setMasterRealm(String masterRealm) {
+        this.masterRealm = masterRealm;
+    }
+
+    public String getRealm() {
         return realm;
     }
 
-    public String clientId() {
+    public void setRealm(String realm) {
+        this.realm = realm;
+    }
+
+    public String getClientId() {
         return clientId;
     }
 
-    public String clientSecret() {
+    public void setClientId(String clientId) {
+        this.clientId = clientId;
+    }
+
+    public String getClientSecret() {
         return clientSecret;
     }
 
-    public boolean initializeOnStartup() {
+    public void setClientSecret(String clientSecret) {
+        this.clientSecret = clientSecret;
+    }
+
+    public boolean isInitializeOnStartup() {
         return initializeOnStartup;
+    }
+
+    public void setInitializeOnStartup(boolean initializeOnStartup) {
+        this.initializeOnStartup = initializeOnStartup;
     }
 
     @Override

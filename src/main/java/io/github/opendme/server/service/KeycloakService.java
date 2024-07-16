@@ -37,6 +37,6 @@ public class KeycloakService {
     }
 
     private RealmResource realm() {
-        return keycloak.realm(config.realm());
+        return keycloak.realm(config.getRealm());
     }
 }

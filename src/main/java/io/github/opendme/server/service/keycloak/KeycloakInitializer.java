@@ -34,7 +34,7 @@ public class KeycloakInitializer implements InitializingBean {
 
     @Override
     public void afterPropertiesSet() throws Exception {
-        if (keycloakConfig.initializeOnStartup()) {
+        if (keycloakConfig.isInitializeOnStartup()) {
             init(false);
         }
     }
@@ -44,7 +44,7 @@ public class KeycloakInitializer implements InitializingBean {
 
         List<RealmRepresentation> realms = keycloak.realms().findAll();
         boolean isAlreadyInitialized =
-                realms.stream().anyMatch(realm -> realm.getId().equals(keycloakConfig.realm()));
+                realms.stream().anyMatch(realm -> realm.getId().equals(keycloakConfig.getRealm()));
 
         if (isAlreadyInitialized && overwrite) {
             reset();
@@ -65,8 +65,8 @@ public class KeycloakInitializer implements InitializingBean {
 
     private void initKeycloakRealm() {
         RealmRepresentation realmRepresentation = new RealmRepresentation();
-        realmRepresentation.setRealm(keycloakConfig.realm());
-        realmRepresentation.setId(keycloakConfig.realm());
+        realmRepresentation.setRealm(keycloakConfig.getRealm());
+        realmRepresentation.setId(keycloakConfig.getRealm());
 
         keycloak.realms().create(realmRepresentation);
     }
@@ -75,7 +75,7 @@ public class KeycloakInitializer implements InitializingBean {
         GroupRepresentation group = new GroupRepresentation();
         group.setName("admin");
         group.setId("admin");
-        try (var res = keycloak.realm(keycloakConfig.realm())
+        try (var res = keycloak.realm(keycloakConfig.getRealm())
                                .groups()
                                .add(group)) {
             // TODO
@@ -95,7 +95,7 @@ public class KeycloakInitializer implements InitializingBean {
         cred.setValue(owner.password());
         user.setCredentials(List.of(cred));
         user.setGroups(List.of("admin"));
-        try (var res = keycloak.realm(keycloakConfig.realm())
+        try (var res = keycloak.realm(keycloakConfig.getRealm())
                                .users()
                                .create(user)) {
             // TODO
@@ -109,7 +109,7 @@ public class KeycloakInitializer implements InitializingBean {
 
     public void reset() {
         try {
-            keycloak.realm(keycloakConfig.realm()).remove();
+            keycloak.realm(keycloakConfig.getRealm()).remove();
         } catch (NotFoundException e) {
             log.error("Failed to reset Keycloak", e);
         }

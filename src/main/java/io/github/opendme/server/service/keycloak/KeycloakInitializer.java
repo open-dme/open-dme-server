@@ -33,7 +33,7 @@ public class KeycloakInitializer implements InitializingBean {
     }
 
     @Override
-    public void afterPropertiesSet() throws Exception {
+    public void afterPropertiesSet() {
         if (keycloakConfig.isInitializeOnStartup()) {
             init(false);
         }
@@ -87,12 +87,12 @@ public class KeycloakInitializer implements InitializingBean {
 
     private void initAdmin() {
         UserRepresentation user = new UserRepresentation();
-        OpenDmeConfig.User owner = openDmeConfig.instanceOwner();
-        user.setUsername(owner.name());
+        OpenDmeConfig.User owner = openDmeConfig.getInstanceOwner();
+        user.setUsername(owner.getName());
         user.setEnabled(true);
         CredentialRepresentation cred = new CredentialRepresentation();
         cred.setType(CredentialRepresentation.PASSWORD);
-        cred.setValue(owner.password());
+        cred.setValue(owner.getName());
         user.setCredentials(List.of(cred));
         user.setGroups(List.of("admin"));
         try (var res = keycloak.realm(keycloakConfig.getRealm())

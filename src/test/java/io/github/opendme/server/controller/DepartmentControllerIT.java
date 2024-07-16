@@ -1,21 +1,13 @@
 package io.github.opendme.server.controller;
 
-import io.github.opendme.SpringBootIntegrationTest;
+import io.github.opendme.ITBase;
 import io.github.opendme.server.entity.DepartmentDto;
-import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.Member;
-import io.github.opendme.server.entity.MemberRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
-import org.springframework.web.context.WebApplicationContext;
-import org.testcontainers.containers.PostgreSQLContainer;
-import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
@@ -25,24 +17,7 @@ import static org.springframework.security.test.web.servlet.request.SecurityMock
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootIntegrationTest
-class DepartmentControllerIT {
-
-    @Autowired
-    private MockMvc mvc;
-
-    @Autowired
-    private WebApplicationContext context;
-    @Autowired
-    DepartmentRepository departmentRepository;
-    @Autowired
-    MemberRepository memberRepository;
-
-    @Container
-    @ServiceConnection
-    private static PostgreSQLContainer<?> postgres = new PostgreSQLContainer<>("postgres:16-alpine");
-
-
+class DepartmentControllerIT extends ITBase {
     @BeforeEach
     void setUp() {
         departmentRepository.deleteAll();
@@ -54,7 +29,7 @@ class DepartmentControllerIT {
     @WithMockUser
     void should_create_department_on_call() throws Exception {
         Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
-        Long adminId = memberRepository.save(admin).id();
+        Long adminId = memberRepository.save(admin).getId();
 
         DepartmentDto departmentDto = new DepartmentDto("Capitol-Außenstelle", adminId);
         ObjectMapper mapper = new ObjectMapper();
@@ -62,14 +37,13 @@ class DepartmentControllerIT {
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
         String requestJson = ow.writeValueAsString(departmentDto);
 
-        MvcResult result = mvc.perform(post("/department")
-                                      .contentType(MediaType.APPLICATION_JSON)
-                                      .with(csrf())
-                                      .content(requestJson))
+        MvcResult result = mvc.perform(
+                                      post("/department")
+                                              .contentType(MediaType.APPLICATION_JSON)
+                                              .with(csrf())
+                                              .content(requestJson))
                               .andExpect(status().isOk())
                               .andReturn();
-
         assertThat(result.getResponse().getContentAsString()).contains("Capitol-Außenstelle");
-
     }
 }

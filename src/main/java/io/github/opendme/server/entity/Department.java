@@ -33,15 +33,15 @@ public class Department {
         this.admin = admin;
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public Member admin() {
+    public Member getAdmin() {
         return admin;
     }
 

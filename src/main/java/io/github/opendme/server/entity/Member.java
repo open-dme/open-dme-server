@@ -41,23 +41,23 @@ public class Member {
         this.email = email;
     }
 
-    public Long id() {
+    public Long getId() {
         return id;
     }
 
-    public Department department() {
+    public Department getDepartment() {
         return department;
     }
 
-    public String name() {
+    public String getName() {
         return name;
     }
 
-    public Set<Skill> skills() {
+    public Set<Skill> getSkills() {
         return skills;
     }
 
-    public String email() {
+    public String getEmail() {
         return email;
     }
 

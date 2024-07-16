@@ -22,7 +22,15 @@ public class DepartmentService {
     }
 
     public Department create(DepartmentDto department) {
-        return departmentRepository.save(mapToEntity(department));
+        Department d = departmentRepository.save(mapToEntity(department));
+        updateAdmin(d);
+        return d;
+    }
+
+    private void updateAdmin(Department d) {
+        Member admin = d.getAdmin();
+        admin.setDepartment(d);
+        memberRepository.save(admin);
     }
 
     Department mapToEntity(DepartmentDto dto) {

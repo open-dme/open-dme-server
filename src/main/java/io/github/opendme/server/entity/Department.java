@@ -20,7 +20,7 @@ public class Department {
     private Long id;
     private String name;
 
-    @OneToOne(optional = false, orphanRemoval = true)
+    @OneToOne(optional = false)
     private Member admin;
 
     public Department() {

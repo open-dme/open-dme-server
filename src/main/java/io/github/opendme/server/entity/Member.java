@@ -63,6 +63,22 @@ public class Member {
         return email;
     }
 
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;

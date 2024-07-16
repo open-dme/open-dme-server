@@ -2,6 +2,7 @@ package io.github.opendme;
 
 import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.MemberRepository;
+import io.github.opendme.server.entity.SkillRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.test.web.servlet.MockMvc;
@@ -16,6 +17,8 @@ public class ITBase {
     protected DepartmentRepository departmentRepository;
     @Autowired
     protected MemberRepository memberRepository;
+    @Autowired
+    protected SkillRepository skillRepository;
 
     @Container
     @ServiceConnection

@@ -5,6 +5,12 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 @Entity
 public class Vehicle {
@@ -13,15 +19,38 @@ public class Vehicle {
     @Column(nullable = false)
     Long id;
     String name;
-    Integer seats;
+
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department department;
+
+    Integer maxSeats;
+
+    @OneToMany(mappedBy = "vehicle", orphanRemoval = true)
+    private Set<VehicleSeat> vehicleSeats = new LinkedHashSet<>();
+
+    public Department getDepartment() {
+        return department;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public Set<VehicleSeat> getVehicleSeats() {
+        return vehicleSeats;
+    }
+
+    public void setVehicleSeats(Set<VehicleSeat> vehicleSeats) {
+        this.vehicleSeats = vehicleSeats;
+    }
 
     public Vehicle() {
     }
 
-    public Vehicle(Long id, String name, Integer seats) {
+    public Vehicle(Long id, String name) {
         this.id = id;
         this.name = name;
-        this.seats = seats;
     }
 
     public Long getId() {
@@ -40,11 +69,11 @@ public class Vehicle {
         this.name = name;
     }
 
-    public Integer getSeats() {
-        return seats;
+    public Integer getMaxSeats() {
+        return maxSeats;
     }
 
-    public void setSeats(Integer seats) {
-        this.seats = seats;
+    public void setMaxSeats(Integer maxSeats) {
+        this.maxSeats = maxSeats;
     }
 }

@@ -33,6 +33,7 @@ spring:
             jwk-set-uri: ${keycloak.realm-url}/protocol/openid-connect/certs
 
 keycloak:
+  initialize-on-startup: false
   base-url: "http://keycloak:8080"
   url: ${keycloak.base-url}/auth/
   realm-url: ${keycloak.url}/realms/${keycloak.realm}
@@ -40,7 +41,9 @@ keycloak:
   realm: "open-dme"
   client-id: admin-cli
   client-secret: 123456789
-  initialize-on-startup: false
+  username: admin
+  password: admin
+  grant-type: password
 
 app:
   instance-owner:

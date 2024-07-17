@@ -1,14 +1,13 @@
 package io.github.opendme.server.service.keycloak;
 
+import io.github.opendme.server.config.AppConfig;
 import io.github.opendme.server.config.KeycloakConfig;
-import io.github.opendme.server.config.OpenDmeConfig;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
 import org.keycloak.representations.idm.RealmRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
-import org.springframework.beans.factory.InitializingBean;
 import org.springframework.stereotype.Service;
 
 import javax.ws.rs.NotFoundException;
@@ -17,32 +16,31 @@ import java.util.List;
 import static org.slf4j.LoggerFactory.getLogger;
 
 @Service
-public class KeycloakInitializer implements InitializingBean {
+public class KeycloakInitializer {
     private static final Logger log = getLogger(KeycloakInitializer.class);
 
-    private final Keycloak keycloak;
+    private final AppConfig appConfig;
     private final KeycloakConfig keycloakConfig;
-    private final OpenDmeConfig openDmeConfig;
+    private final Keycloak keycloak;
 
-    public KeycloakInitializer(Keycloak keycloak,
+    public KeycloakInitializer(AppConfig appConfig,
                                KeycloakConfig keycloakConfig,
-                               OpenDmeConfig openDmeConfig) {
-        this.keycloak = keycloak;
+                               Keycloak keycloak) {
+        this.appConfig = appConfig;
         this.keycloakConfig = keycloakConfig;
-        this.openDmeConfig = openDmeConfig;
-    }
-
-    @Override
-    public void afterPropertiesSet() {
-        if (keycloakConfig.isInitializeOnStartup()) {
-            init(false);
-        }
+        this.keycloak = keycloak;
     }
 
     public void init(boolean overwrite) {
         log.info("Initializer start");
 
-        List<RealmRepresentation> realms = keycloak.realms().findAll();
+        List<RealmRepresentation> realms;
+        try {
+            realms = keycloak.realms().findAll();
+        } catch (RuntimeException e) {
+            log.error("Could not retrieve available realms.", e);
+            throw new RuntimeException(e);
+        }
         boolean isAlreadyInitialized =
                 realms.stream().anyMatch(realm -> realm.getId().equals(keycloakConfig.getRealm()));
 
@@ -61,6 +59,7 @@ public class KeycloakInitializer implements InitializingBean {
     private void initKeycloak() {
         initKeycloakRealm();
         initKeycloakGroups();
+        initAdmin();
     }
 
     private void initKeycloakRealm() {
@@ -82,12 +81,14 @@ public class KeycloakInitializer implements InitializingBean {
             if (res.getStatus() >= 200 && res.getStatus() < 300) {
                 log.info("Created default admin group");
             }
+        } catch (RuntimeException e) {
+            log.error("Could not create admin group", e);
         }
     }
 
     private void initAdmin() {
         UserRepresentation user = new UserRepresentation();
-        OpenDmeConfig.User owner = openDmeConfig.getInstanceOwner();
+        AppConfig.User owner = appConfig.getInstanceOwner();
         user.setUsername(owner.getName());
         user.setEnabled(true);
         CredentialRepresentation cred = new CredentialRepresentation();
@@ -102,7 +103,8 @@ public class KeycloakInitializer implements InitializingBean {
             if (res.getStatus() >= 200 && res.getStatus() < 300) {
                 log.info("Created default user with credentials from configuration");
             }
-
+        } catch (RuntimeException e) {
+            log.error("Could not create admin user", e);
         }
 
     }

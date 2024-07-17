@@ -1,5 +1,16 @@
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5433/postgres"
+
 keycloak:
   base-url: "http://0.0.0.0:9080"
+  username: admin
+  password: admin
+  client-secret: G9ZGhl6wrmSaA5wsNJPw7CEofv8OW7MT
+  initialize-on-startup: true
+  login-method: password
+
+app:
+  instance-owner:
+    name: "local"
+    password: "passy"

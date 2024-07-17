@@ -42,3 +42,7 @@ keycloak:
   client-secret: 123456789
   initialize-on-startup: false
 
+app:
+  instance-owner:
+    name: "admin"
+    password: "admin"

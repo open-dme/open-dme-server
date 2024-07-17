@@ -8,7 +8,7 @@ keycloak:
   password: admin
   client-secret: G9ZGhl6wrmSaA5wsNJPw7CEofv8OW7MT
   initialize-on-startup: true
-  login-method: password
+  grant-type: password
 
 app:
   instance-owner:

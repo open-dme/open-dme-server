@@ -1,6 +1,5 @@
 package io.github.opendme.server.config;
 
-import org.keycloak.OAuth2Constants;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,19 +12,19 @@ public class KeycloakConfig {
     private String url;
     private String masterRealm;
     private String realm;
-    private String loginMethod;
+    private String grantType;
     private String username;
     private String password;
     private String clientId;
     private String clientSecret;
     private boolean initializeOnStartup;
 
-    public String getLoginMethod() {
-        return loginMethod;
+    public String getGrantType() {
+        return grantType;
     }
 
-    public void setLoginMethod(String loginMethod) {
-        this.loginMethod = loginMethod;
+    public void setGrantType(String grantType) {
+        this.grantType = grantType;
     }
 
     public String getUsername() {

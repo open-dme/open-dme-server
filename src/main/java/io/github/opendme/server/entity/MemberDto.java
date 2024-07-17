@@ -1,30 +1,30 @@
 package io.github.opendme.server.entity;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 /**
  * DTO for {@link Member}
  */
 public class MemberDto implements Serializable {
-    private final Long id;
     private final Long departmentId;
+    @NotEmpty(message = "Name can not be empty")
     private final String name;
-    private final Set<Long> skillIds;
+    private final List<Long> skillIds;
+    @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must be valid")
     private final String email;
 
-    public MemberDto(Long id, Long departmentId, String name, Set<Long> skillIds, String email) {
-        this.id = id;
+    public MemberDto(Long departmentId, String name, List<Long> skillIds, String email) {
         this.departmentId = departmentId;
         this.name = name;
         this.skillIds = skillIds;
         this.email = email;
     }
 
-    public Long getId() {
-        return id;
-    }
 
     public Long getDepartmentId() {
         return departmentId;
@@ -34,7 +34,7 @@ public class MemberDto implements Serializable {
         return name;
     }
 
-    public Set<Long> getSkillIds() {
+    public List<Long> getSkillIds() {
         return skillIds;
     }
 
@@ -47,8 +47,7 @@ public class MemberDto implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         MemberDto entity = (MemberDto) o;
-        return Objects.equals(this.id, entity.id) &&
-                Objects.equals(this.departmentId, entity.departmentId) &&
+        return Objects.equals(this.departmentId, entity.departmentId) &&
                 Objects.equals(this.name, entity.name) &&
                 Objects.equals(this.skillIds, entity.skillIds) &&
                 Objects.equals(this.email, entity.email);
@@ -56,13 +55,12 @@ public class MemberDto implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, departmentId, name, skillIds, email);
+        return Objects.hash(departmentId, name, skillIds, email);
     }
 
     @Override
     public String toString() {
         return getClass().getSimpleName() + "(" +
-                "id = " + id + ", " +
                 "departmentId = " + departmentId + ", " +
                 "name = " + name + ", " +
                 "skillIds = " + skillIds + ", " +

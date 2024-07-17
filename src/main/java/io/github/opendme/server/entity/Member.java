@@ -1,6 +1,7 @@
 package io.github.opendme.server.entity;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
@@ -12,12 +13,12 @@ import java.util.Objects;
 import java.util.Set;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @SuppressWarnings("unused")
 public class Member {
     @Id
     @GeneratedValue
     private Long id;
-    @JsonBackReference
     @ManyToOne
     private Department department;
     private String name;
@@ -60,6 +61,22 @@ public class Member {
 
     public String getEmail() {
         return email;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSkills(Set<Skill> skills) {
+        this.skills = skills;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     @Override

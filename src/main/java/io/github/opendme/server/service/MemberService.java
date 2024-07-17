@@ -36,11 +36,11 @@ public class MemberService {
         if (dto.getDepartmentId() != null &&
                 !departmentRepository.existsById(dto.getDepartmentId()))
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Department does not exist.");
-        if (skillsDontExist(dto))
+        if (skillsAreSetAndInvalid(dto))
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Skills not valid.");
     }
 
-    private boolean skillsDontExist(MemberDto dto) {
+    private boolean skillsAreSetAndInvalid(MemberDto dto) {
         return !CollectionUtils.isEmpty(dto.getSkillIds()) &&
                 dto.getSkillIds().size() != skillRepository.countAllByIdIn(dto.getSkillIds());
     }

@@ -46,7 +46,7 @@ class MemberControllerIT extends ITBase {
     @Test
     @WithMockUser
     void should_create_minimal_member() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(null, null, "valid@mail.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe", null, "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
@@ -57,7 +57,7 @@ class MemberControllerIT extends ITBase {
     void should_create_member_with_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(departmentId, null, "valid@mail.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", null, "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
@@ -69,7 +69,7 @@ class MemberControllerIT extends ITBase {
     void should_reject_invalid_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(666L, null, "valid@mail.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(666L, "Jon Doe", null, "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
@@ -80,7 +80,7 @@ class MemberControllerIT extends ITBase {
         createDepartment();
         List<Long> skills = createSkills();
 
-        MockHttpServletResponse response = sendCreateRequestWith(departmentId, skills, "valid@mail.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", skills, "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
@@ -93,7 +93,7 @@ class MemberControllerIT extends ITBase {
     void should_reject_invalid_skill() throws Exception {
         createSkills();
 
-        MockHttpServletResponse response = sendCreateRequestWith(null, List.of(9L), "valid@mail.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", List.of(9L), "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
@@ -101,9 +101,19 @@ class MemberControllerIT extends ITBase {
     @Test
     @WithMockUser
     void should_reject_invalid_email() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(null, null, "notValid.com");
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", null, "notValid.com"));
 
         assertThat(response.getStatus()).isEqualTo(400);
+        assertThat(response.getContentAsString()).contains("email");
+    }
+
+    @Test
+    @WithMockUser
+    void should_reject_empty_name() throws Exception {
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "", null, "notValid.com"));
+
+        assertThat(response.getStatus()).isEqualTo(400);
+        assertThat(response.getContentAsString()).contains("name");
     }
 
     private void createDepartment() {
@@ -121,8 +131,7 @@ class MemberControllerIT extends ITBase {
         return skillIds;
     }
 
-    private MockHttpServletResponse sendCreateRequestWith(Long departmentId, List<Long> skills, String email) throws Exception {
-        MemberDto memberDto = new MemberDto(departmentId, "Jon Doe", skills, email);
+    private MockHttpServletResponse sendCreateRequestWith(MemberDto memberDto) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
         mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);

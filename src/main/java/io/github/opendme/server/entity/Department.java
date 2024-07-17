@@ -1,9 +1,9 @@
 package io.github.opendme.server.entity;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
@@ -11,6 +11,7 @@ import jakarta.persistence.OneToOne;
 import java.util.Objects;
 
 @Entity
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @SuppressWarnings("unused")
 public class Department {
     @Id
@@ -19,8 +20,7 @@ public class Department {
     private Long id;
     private String name;
 
-    @JsonManagedReference
-    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    @OneToOne(optional = false)
     private Member admin;
 
     public Department() {

@@ -31,6 +31,8 @@ services:
       KEYCLOAK_ADMIN: "admin"
       KEYCLOAK_ADMIN_PASSWORD: "admin"
       KC_FEATURES:
+    volumes:
+       - "./kc_data:/opt/keycloak/data/import"
 
   keycloak-prod:
     extends:
@@ -46,6 +48,7 @@ services:
       - start
       - --optimized
       - --hostname-port=8080
+      - --import-realm
 
   keycloak-dev:
     extends:
@@ -56,6 +59,14 @@ services:
     command:
       - start-dev
       - --verbose
+      - --import-realm
+  database-dev:
+    extends:
+      service: database
+    profiles:
+      - dev
+    ports:
+      - "5432:5432"
 
   database:
     image: postgres

@@ -1,5 +1,8 @@
 package io.github.opendme.server.entity;
 
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,7 +10,9 @@ import java.util.Objects;
  * DTO for {@link Department}
  */
 public class DepartmentDto implements Serializable {
+    @NotEmpty
     private final String name;
+    @NotNull
     private final Long adminId;
 
     public DepartmentDto(String name, Long adminId) {

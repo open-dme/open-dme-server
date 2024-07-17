@@ -9,7 +9,6 @@ import io.swagger.v3.oas.models.security.OAuthFlows;
 import io.swagger.v3.oas.models.security.Scopes;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import io.swagger.v3.oas.models.security.SecurityScheme;
-
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -29,9 +28,9 @@ public class OpenApiConfig {
         return new OpenAPI().components(new Components()
                                     .addSecuritySchemes(OAUTH_SCHEME_NAME, createOAuthScheme()))
                             .addSecurityItem(new SecurityRequirement().addList(OAUTH_SCHEME_NAME))
-                            .info(new Info().title("Todos Management Service")
-                                            .description("A service providing todos.")
-                                            .version("1.0"));
+                            .info(new Info().title("Open-DME-Server")
+                                            .description("Server for the open-dme project.")
+                                            .version("0.0.1"));
     }
 
     private SecurityScheme createOAuthScheme() {

@@ -2,6 +2,7 @@ package io.github.opendme.server.service.keycloak;
 
 import io.github.opendme.server.config.AppConfig;
 import io.github.opendme.server.config.KeycloakConfig;
+import jakarta.ws.rs.NotFoundException;
 import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.GroupRepresentation;
@@ -10,7 +11,6 @@ import org.keycloak.representations.idm.UserRepresentation;
 import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
-import javax.ws.rs.NotFoundException;
 import java.util.List;
 
 import static org.slf4j.LoggerFactory.getLogger;

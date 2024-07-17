@@ -19,7 +19,7 @@ repositories {
 
 dependencies {
     implementation(libs.driver.postgres)
-	implementation("org.keycloak", "keycloak-admin-client", "21.0.1")
+	implementation("org.keycloak", "keycloak-admin-client", "25.0.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
     implementation("org.springframework.boot:spring-boot-starter-web")

@@ -2,7 +2,7 @@ spring:
   application:
     name: server
   datasource:
-    url: "jdbc:postgresql://database/postgres"
+    url: "jdbc:postgresql://0.0.0.0/postgres"
     username: postgres
     password: postgres
     driver-class-name: org.postgresql.Driver
@@ -19,7 +19,7 @@ spring:
         registration:
           open-dme:
             client-id: "open-dme"
-            client-secret: U57todoX9MWXlr2irfa51cCdJfGGwxPZ
+            client-secret: "RrWwT4xHHe3In0sZnRQ36ZuAwhWAxIc7"
             scope:
               - openid
               - profile
@@ -33,6 +33,12 @@ spring:
             jwk-set-uri: ${keycloak.base-path}/protocol/openid-connect/certs
 
 keycloak:
-  base-url: "http://0.0.0.0:8080"
+  base-url: "http://0.0.0.0:9080"
   realm: "open-dme"
   base-path: ${keycloak.base-url}/auth/realms/${keycloak.realm}
+
+
+springdoc:
+  swagger-ui:
+    oauth:
+      client-id: ${spring.security.oauth2.client.registration.open-dme.client-id}

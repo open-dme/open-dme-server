@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+    <configuration default="false" name="Start local" type="CompoundRunConfigurationType">
+        <toRun name="docker/compose.yml: Compose local" type="docker-deploy"/>
+        <toRun name="ServerApplication [local]" type="SpringBootApplicationConfigurationType"/>
+        <method v="2"/>
+    </configuration>
+</component>

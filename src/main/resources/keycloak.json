@@ -1,0 +1,15 @@
+{
+  "groups": [
+    {
+      "name": "user"
+    },
+    {
+      "name": "leader",
+      "subGroups": [{"name": "user"}]
+    },
+    {
+      "name": "admin",
+      "subGroups": [{"name": "leader"}]
+    }
+  ]
+}

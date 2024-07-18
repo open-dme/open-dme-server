@@ -6,12 +6,9 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.MemberSkill;
-import io.github.opendme.server.entity.MemberSkillRepository;
-import io.github.opendme.server.entity.Skill;
-import io.github.opendme.server.entity.SkillRepository;
+import io.github.opendme.server.entity.Status;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
-import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
@@ -31,6 +28,14 @@ public class MemberService {
     public Member create(MemberDto dto) {
         validate(dto);
         return memberRepository.save(mapToEntity(dto));
+    }
+
+    public void setMemberStatus(Long memberId, Status status) {
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(() -> new HttpClientErrorException(HttpStatusCode.valueOf(400), "Member not found."));
+        member.setStatus(status);
+
+        memberRepository.save(member);
     }
 
     private void validate(MemberDto dto) {

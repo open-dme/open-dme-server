@@ -1,10 +1,12 @@
 package io.github.opendme.server.controller;
 
 import io.github.opendme.ITBase;
-import io.github.opendme.server.entity.DepartmentDto;
-import io.github.opendme.server.entity.Member;
+import io.github.opendme.server.entity.MemberDto;
+import io.github.opendme.server.entity.Status;
+import io.github.opendme.server.service.MemberService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -17,9 +19,12 @@ import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFea
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
-class DepartmentControllerIT extends ITBase {
+public class MemberControllerPatchIT extends ITBase {
+    Long memberId;
+    @Autowired
+    MemberService memberService;
 
     @Container
     @ServiceConnection
@@ -27,49 +32,50 @@ class DepartmentControllerIT extends ITBase {
 
     @BeforeEach
     void setUp() {
-        departmentRepository.deleteAll();
         memberRepository.deleteAll();
 
+        createMember();
+    }
+
+
+    @Test
+    @WithMockUser
+    void should_patch_status() throws Exception {
+        MockHttpServletResponse response = sendPatchStatusRequestWith(Status.AVAILABLE, memberId);
+
+        assertThat(response.getStatus()).isEqualTo(202);
+        assertThat(memberRepository.findById(memberId).get().getStatus()).isEqualTo(Status.AVAILABLE);
     }
 
     @Test
     @WithMockUser
-    void should_create_department_on_call() throws Exception {
-        Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
-        Long adminId = memberRepository.save(admin).getId();
-
-        MockHttpServletResponse response = sendCreateRequestWith(adminId);
-
-        assertThat(response.getStatus()).isEqualTo(201);
-        assertThat(response.getContentAsString()).contains("Capitol-Außenstelle");
-        assertThat(response.getContentAsString()).contains(adminId.toString());
-    }
-
-    @Test
-    @WithMockUser
-    void should_decline_empty_admin() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(null);
+    void should_fail_on_wrong_memberId() throws Exception {
+        MockHttpServletResponse response = sendPatchStatusRequestWith(Status.AVAILABLE, 99L);
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
 
     @Test
     @WithMockUser
-    void should_decline_non_existing_admin() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(666L);
+    void should_fail_on_wrong_status() throws Exception {
+        MockHttpServletResponse response = sendPatchStatusRequestWith("QUATSCH", memberId);
 
-        assertThat(response.getStatus()).isEqualTo(422);
+        assertThat(response.getStatus()).isEqualTo(400);
     }
 
-    private MockHttpServletResponse sendCreateRequestWith(Long adminId) throws Exception {
-        DepartmentDto departmentDto = new DepartmentDto("Capitol-Außenstelle", adminId);
+    private void createMember() {
+        memberId = memberService.create(new MemberDto(null, "noob", "valid@mail.com")).getId();
+    }
+
+    private MockHttpServletResponse sendPatchStatusRequestWith(Object status, Long memberId) throws Exception {
         ObjectMapper mapper = new ObjectMapper();
         mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(departmentDto);
+        String requestJson = ow.writeValueAsString(status);
 
         return mvc.perform(
-                          post("/department")
+                          patch("/member/{memberId}/status", memberId)
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
                                   .content(requestJson))

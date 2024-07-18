@@ -1,5 +1,6 @@
 package io.github.opendme.server.entity;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 
@@ -10,10 +11,13 @@ import java.util.Objects;
 /**
  * DTO for {@link Member}
  */
+@Schema
 public class MemberDto implements Serializable {
     private final Long departmentId;
+    @Schema(description = "the name", example = "test")
     @NotEmpty(message = "Name can not be empty")
     private final String name;
+    @Schema(description = "the email", example = "test@test.de")
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must be valid")
     private final String email;
 

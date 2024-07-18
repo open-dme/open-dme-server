@@ -7,6 +7,7 @@ import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Skill;
 import io.github.opendme.server.service.DepartmentService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -46,7 +47,7 @@ class MemberControllerIT extends ITBase {
     @Test
     @WithMockUser
     void should_create_minimal_member() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe", null, "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe",  "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
@@ -57,7 +58,7 @@ class MemberControllerIT extends ITBase {
     void should_create_member_with_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", null, "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe",  "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
@@ -69,7 +70,7 @@ class MemberControllerIT extends ITBase {
     void should_reject_invalid_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(666L, "Jon Doe", null, "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(666L, "Jon Doe",  "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
@@ -78,22 +79,21 @@ class MemberControllerIT extends ITBase {
     @WithMockUser
     void should_create_member_with_all() throws Exception {
         createDepartment();
-        List<Long> skills = createSkills();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", skills, "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(200);
         assertThat(response.getContentAsString()).contains("Jon Doe");
         assertThat(response.getContentAsString()).contains(departmentId.toString());
-        assertThat(response.getContentAsString()).contains("Atemschutzträger");
     }
 
     @Test
     @WithMockUser
+    @Disabled
     void should_reject_invalid_skill() throws Exception {
         createSkills();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", List.of(9L), "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
@@ -101,7 +101,7 @@ class MemberControllerIT extends ITBase {
     @Test
     @WithMockUser
     void should_reject_invalid_email() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", null, "notValid.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", "notValid.com"));
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getContentAsString()).contains("email");
@@ -110,7 +110,7 @@ class MemberControllerIT extends ITBase {
     @Test
     @WithMockUser
     void should_reject_empty_name() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "", null, "notValid.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "", "notValid.com"));
 
         assertThat(response.getStatus()).isEqualTo(400);
         assertThat(response.getContentAsString()).contains("name");

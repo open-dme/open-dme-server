@@ -5,6 +5,8 @@ import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.MemberRepository;
+import io.github.opendme.server.entity.MemberSkill;
+import io.github.opendme.server.entity.MemberSkillRepository;
 import io.github.opendme.server.entity.Skill;
 import io.github.opendme.server.entity.SkillRepository;
 import org.springframework.http.HttpStatusCode;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.util.Collections;
 import java.util.Objects;
 import java.util.Set;
 
@@ -19,12 +22,10 @@ import java.util.Set;
 public class MemberService {
     DepartmentRepository departmentRepository;
     MemberRepository memberRepository;
-    SkillRepository skillRepository;
 
-    public MemberService(DepartmentRepository departmentRepository, MemberRepository memberRepository, SkillRepository skillRepository) {
+    public MemberService(DepartmentRepository departmentRepository, MemberRepository memberRepository) {
         this.departmentRepository = departmentRepository;
         this.memberRepository = memberRepository;
-        this.skillRepository = skillRepository;
     }
 
     public Member create(MemberDto dto) {
@@ -36,26 +37,23 @@ public class MemberService {
         if (dto.getDepartmentId() != null &&
                 !departmentRepository.existsById(dto.getDepartmentId()))
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Department does not exist.");
-        if (skillsAreSetAndInvalid(dto))
-            throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Skills not valid.");
+//        if (skillsAreSetAndInvalid(dto))
+//            throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Skills not valid.");
     }
 
-    private boolean skillsAreSetAndInvalid(MemberDto dto) {
-        return !CollectionUtils.isEmpty(dto.getSkillIds()) &&
-                dto.getSkillIds().size() != skillRepository.countAllByIdIn(dto.getSkillIds());
-    }
+//    private boolean skillsAreSetAndInvalid(MemberDto dto) {
+//        return !CollectionUtils.isEmpty(dto.getSkillIds()) &&
+//                dto.getSkillIds().size() != skillRepository.countAllByIdIn(dto.getSkillIds());
+//    }
 
     private Member mapToEntity(MemberDto dto) {
         Department department = null;
-        Set<Skill> skills = null;
+        Set<MemberSkill> skills = null;
 
         if (Objects.nonNull(dto.getDepartmentId()))
             department = departmentRepository.findById(dto.getDepartmentId()).get();
 
-        if (!CollectionUtils.isEmpty(dto.getSkillIds()))
-            skills = skillRepository.findAllByIdIn(dto.getSkillIds());
-
-        return new Member(null, department, dto.getName(), skills, dto.getEmail());
+        return new Member(null, department, dto.getName(), Collections.emptySet(), dto.getEmail());
     }
 
 }

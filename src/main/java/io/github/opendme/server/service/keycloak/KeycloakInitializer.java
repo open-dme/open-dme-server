@@ -90,15 +90,14 @@ public class KeycloakInitializer {
             try (var res = realmReq().groups().group(group.getId()).subGroup(resolved)) {
                 if (res.getStatus() >= 200 && res.getStatus() < 300) {
                     log.info("Updated sub groups for group %s:%s".formatted(group.getId(), group.getName()));
+                } else if (res.getStatus() == 409) {
+                    // Already set
                 } else {
                     log.error("Could not create or update sub groups for %s".formatted(group.getName()));
                     throw new RuntimeException("Could not create or update sub groups for %s: %s".formatted(group.getName(), res.getStatusInfo().getReasonPhrase()));
                 }
-
             }
-
         }
-
     }
 
     private void createGroup(GroupRepresentation group) {
@@ -137,7 +136,6 @@ public class KeycloakInitializer {
         } catch (RuntimeException e) {
             log.error("Could not create admin user", e);
         }
-
     }
 
     public void reset() {

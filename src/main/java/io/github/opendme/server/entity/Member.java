@@ -2,12 +2,15 @@ package io.github.opendme.server.entity;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 
 import java.util.Objects;
 import java.util.Set;
@@ -19,12 +22,11 @@ public class Member {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     private Department department;
     private String name;
-    @ManyToMany
-    @JoinTable
-    private Set<Skill> skills;
+    @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
+    private Set<MemberSkill> skills;
     private String email;
 
     public Member() {
@@ -34,7 +36,7 @@ public class Member {
             Long id,
             Department department,
             String name,
-            Set<Skill> skills,
+            Set<MemberSkill> skills,
             String email) {
         this.id = id;
         this.department = department;
@@ -55,7 +57,7 @@ public class Member {
         return name;
     }
 
-    public Set<Skill> getSkills() {
+    public Set<MemberSkill> getSkills() {
         return skills;
     }
 
@@ -71,7 +73,7 @@ public class Member {
         this.name = name;
     }
 
-    public void setSkills(Set<Skill> skills) {
+    public void setSkills(Set<MemberSkill> skills) {
         this.skills = skills;
     }
 

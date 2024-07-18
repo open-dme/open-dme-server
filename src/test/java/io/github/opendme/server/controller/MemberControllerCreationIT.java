@@ -6,7 +6,6 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Skill;
 import io.github.opendme.server.service.DepartmentService;
-import io.github.opendme.server.service.KeycloakService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -14,7 +13,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -38,8 +36,6 @@ class MemberControllerCreationIT extends ITBase {
     Long departmentId;
     @Autowired
     DepartmentService departmentService;
-    @MockBean
-    KeycloakService keycloakService;
     @Captor
     ArgumentCaptor<Member> memberCaptor;
 

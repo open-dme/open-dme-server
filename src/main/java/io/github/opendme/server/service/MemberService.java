@@ -6,6 +6,7 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.MemberSkill;
+import io.github.opendme.server.entity.Permission;
 import io.github.opendme.server.entity.Status;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
@@ -35,6 +36,14 @@ public class MemberService {
                                         .orElseThrow(() -> new HttpClientErrorException(HttpStatusCode.valueOf(400), "Member not found."));
         member.setStatus(status);
 
+        memberRepository.save(member);
+    }
+
+    public void setMemberPermissions(Long memberId, Set<Permission> permissions) {
+        // Todo: Check whether the setting member has the req permissions
+        Member member = memberRepository.findById(memberId)
+                                        .orElseThrow(() -> new HttpClientErrorException(HttpStatusCode.valueOf(400), "Member not found"));
+        member.setPermissions(permissions);
         memberRepository.save(member);
     }
 

@@ -27,7 +27,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-class MemberControllerIT extends ITBase {
+class MemberControllerCreationIT extends ITBase {
     Long departmentId;
     @Autowired
     DepartmentService departmentService;
@@ -49,7 +49,7 @@ class MemberControllerIT extends ITBase {
     void should_create_minimal_member() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe",  "valid@mail.com"));
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
     }
 
@@ -60,7 +60,7 @@ class MemberControllerIT extends ITBase {
 
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe",  "valid@mail.com"));
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
         assertThat(response.getContentAsString()).contains(departmentId.toString());
     }
@@ -82,7 +82,7 @@ class MemberControllerIT extends ITBase {
 
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", "valid@mail.com"));
 
-        assertThat(response.getStatus()).isEqualTo(200);
+        assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
         assertThat(response.getContentAsString()).contains(departmentId.toString());
     }

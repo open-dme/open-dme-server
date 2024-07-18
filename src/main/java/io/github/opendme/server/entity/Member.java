@@ -4,11 +4,9 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
@@ -28,6 +26,8 @@ public class Member {
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)
     private Set<MemberSkill> skills;
     private String email;
+    @Enumerated
+    private Status status;
 
     public Member() {
     }
@@ -65,6 +65,10 @@ public class Member {
         return email;
     }
 
+    public Status getStatus() {
+        return status;
+    }
+
     public void setDepartment(Department department) {
         this.department = department;
     }
@@ -81,32 +85,20 @@ public class Member {
         this.email = email;
     }
 
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Member) obj;
-        return Objects.equals(this.id, that.id) &&
-                Objects.equals(this.department, that.department) &&
-                Objects.equals(this.name, that.name) &&
-                Objects.equals(this.skills, that.skills) &&
-                Objects.equals(this.email, that.email);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Member member = (Member) o;
+        return Objects.equals(id, member.id) && Objects.equals(department, member.department) && Objects.equals(name, member.name) && Objects.equals(skills, member.skills) && Objects.equals(email, member.email) && status == member.status;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, department, name, skills, email);
+        return Objects.hash(id, department, name, skills, email, status);
     }
-
-    @Override
-    public String toString() {
-        return "Member[" +
-                "id=" + id + ", " +
-                "department=" + department + ", " +
-                "name=" + name + ", " +
-                "skills=" + skills + ", " +
-                "email=" + email + ']';
-    }
-
-
 }

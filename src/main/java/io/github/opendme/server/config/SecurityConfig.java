@@ -53,24 +53,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-
-    @Bean
-    public OAuth2AccessTokenResponseClient<OAuth2AuthorizationCodeGrantRequest> accessTokenResponseClient() {
-        DefaultAuthorizationCodeTokenResponseClient client = new DefaultAuthorizationCodeTokenResponseClient();
-
-        client.setRequestEntityConverter(new OAuth2AuthorizationCodeGrantRequestEntityConverter());
-
-        return client;
-    }
-
-    @Bean
-    public OAuth2UserService<OAuth2UserRequest, OAuth2User> oauthUserService() {
-        DefaultOAuth2UserService service = new DefaultOAuth2UserService();
-        service.setRequestEntityConverter(new OAuth2UserRequestEntityConverter());
-
-        return service;
-    }
-
     @Bean
     public Converter<Jwt, Collection<GrantedAuthority>> jwtGrantedAuthoritiesConverter() {
         return new MappingJwtGrantedAuthoritiesConverter();

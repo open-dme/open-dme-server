@@ -6,7 +6,6 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class SecurityService {
-
     public boolean hasPermission(String role) {
         if(SecurityContextHolder.getContext().getAuthentication().getPrincipal() instanceof Jwt jwt){
                 return jwt.getClaimAsStringList("groups").contains(role);

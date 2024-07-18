@@ -4,6 +4,7 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.service.MemberService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
 import java.security.Principal;
@@ -36,7 +37,7 @@ public class MemberController {
     @PostMapping(value = "/member", produces = "application/json;charset=UTF-8")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    @PreAuthorize("@securityService.hasPermission('admin')")
+    @RolesAllowed("admin")
     public Member create(@RequestBody @Valid MemberDto dto) {
         Member member = service.create(dto);
         log.atInfo().log("Member created");
@@ -46,7 +47,7 @@ public class MemberController {
 
     @PatchMapping(value = "/member/{memberId}/status", produces = "application/json;charset=UTF-8")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @PreAuthorize("@securityService.hasPermission('admin')")
+    @RolesAllowed("admin")
     public void setStatus(@PathVariable Long memberId, @RequestBody Status status) {
         service.setMemberStatus(memberId, status);
         log.atInfo().log("Member status patched");

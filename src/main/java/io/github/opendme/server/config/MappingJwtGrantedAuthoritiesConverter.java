@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 public class MappingJwtGrantedAuthoritiesConverter implements Converter<Jwt, Collection<GrantedAuthority>> {
 
-    private String authorityPrefix = "SCOPE_";
+    private final String authorityPrefix = "ROLE_";
 
     private static final String GROUPS = "groups";
     private static final String REALM_ACCESS_CLAIM = "realm_access";

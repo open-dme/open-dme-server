@@ -4,6 +4,9 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authorization.AuthorityAuthorizationDecision;
+import org.springframework.security.authorization.AuthorizationDeniedException;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -42,6 +45,24 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), ex.getStatusCode(), request);
     }
+
+    private record MissingRoles(String message, List<String> roles) {
+    }
+
+    private MissingRoles extractFrom(AuthorityAuthorizationDecision decision) {
+        var roles = decision.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
+        return new MissingRoles(
+                "You lack the following roles:",
+                roles
+        );
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    protected ResponseEntity<Object> unauthenticatedHandler(
+            AuthorizationDeniedException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<Object> genericHandler(

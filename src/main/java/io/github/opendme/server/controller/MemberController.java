@@ -23,8 +23,9 @@ public class MemberController {
     MemberService service;
     KeycloakService keycloakService;
 
-    public MemberController(MemberService service) {
+    public MemberController(MemberService service, KeycloakService keycloakService) {
         this.service = service;
+        this.keycloakService = keycloakService;
     }
 
     @PostMapping(value = "/member", produces = "application/json;charset=UTF-8")

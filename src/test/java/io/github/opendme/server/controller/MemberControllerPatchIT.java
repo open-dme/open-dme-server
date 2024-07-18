@@ -1,6 +1,7 @@
 package io.github.opendme.server.controller;
 
 import io.github.opendme.ITBase;
+import io.github.opendme.SpringBootIntegrationTest;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.service.MemberService;
@@ -21,6 +22,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
+@SpringBootIntegrationTest
 public class MemberControllerPatchIT extends ITBase {
     Long memberId;
     @Autowired
@@ -39,7 +41,7 @@ public class MemberControllerPatchIT extends ITBase {
 
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_patch_status() throws Exception {
         MockHttpServletResponse response = sendPatchStatusRequestWith(Status.AVAILABLE, memberId);
 
@@ -48,7 +50,7 @@ public class MemberControllerPatchIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_fail_on_wrong_memberId() throws Exception {
         MockHttpServletResponse response = sendPatchStatusRequestWith(Status.AVAILABLE, 99L);
 
@@ -56,7 +58,7 @@ public class MemberControllerPatchIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_fail_on_wrong_status() throws Exception {
         MockHttpServletResponse response = sendPatchStatusRequestWith("QUATSCH", memberId);
 

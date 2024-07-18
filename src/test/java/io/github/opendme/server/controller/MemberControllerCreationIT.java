@@ -1,6 +1,7 @@
 package io.github.opendme.server.controller;
 
 import io.github.opendme.ITBase;
+import io.github.opendme.SpringBootIntegrationTest;
 import io.github.opendme.server.entity.DepartmentDto;
 import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
@@ -27,6 +28,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
+@SpringBootIntegrationTest
 class MemberControllerCreationIT extends ITBase {
     Long departmentId;
     @Autowired
@@ -45,7 +47,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_create_minimal_member() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe",  "valid@mail.com"));
 
@@ -54,7 +56,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_create_member_with_department() throws Exception {
         createDepartment();
 
@@ -66,7 +68,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_reject_invalid_department() throws Exception {
         createDepartment();
 
@@ -76,7 +78,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_create_member_with_all() throws Exception {
         createDepartment();
 
@@ -88,7 +90,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     @Disabled
     void should_reject_invalid_skill() throws Exception {
         createSkills();
@@ -99,7 +101,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_reject_invalid_email() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "name", "notValid.com"));
 
@@ -108,7 +110,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_reject_empty_name() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "", "notValid.com"));
 

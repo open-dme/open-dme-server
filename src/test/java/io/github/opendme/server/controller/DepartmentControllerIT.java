@@ -33,7 +33,7 @@ class DepartmentControllerIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_create_department_on_call() throws Exception {
         Member admin = new Member(null, null, "Bernd Stromberg", null, "stromberg@schadensregulierung.capitol.de");
         Long adminId = memberRepository.save(admin).getId();
@@ -46,7 +46,7 @@ class DepartmentControllerIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_decline_empty_admin() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(null);
 
@@ -54,7 +54,7 @@ class DepartmentControllerIT extends ITBase {
     }
 
     @Test
-    @WithMockUser
+    @WithMockUser(roles = {"admin"})
     void should_decline_non_existing_admin() throws Exception {
         MockHttpServletResponse response = sendCreateRequestWith(666L);
 

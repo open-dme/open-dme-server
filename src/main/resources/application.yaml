@@ -15,6 +15,10 @@ spring:
       ddl-auto: update
   security:
     oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: ${keycloak.base-url}/realms/${keycloak.realm}
+          jwk-set-uri: ${spring.security.oauth2.resourceserver.jwt.issuer-uri}/protocol/openid-connect/certs
       client:
         registration:
           open-dme:
@@ -23,20 +27,19 @@ spring:
             scope:
               - openid
               - profile
-            authorization-grantType: authorization_code
+              - roles
+            authorization-grant-type: authorization_code
             redirect-uri: "{baseScheme}://{baseHost}{basePort}/login/oauth2/code/open-dme"
         provider:
           open-dme:
-            token-uri: ${keycloak.realm-url}/protocol/openid-connect/token
-            authorization-uri: ${keycloak.realm-url}/protocol/openid-connect/auth
-            user-name-attribute: preferred_username
-            jwk-set-uri: ${keycloak.realm-url}/protocol/openid-connect/certs
+            issuer-uri: "${keycloak.base-url}/realms/${keycloak.realm}"
 
+# http://0.0.0.0:9080/realms/open-dme/.well-known/openid-configuration
 keycloak:
   initialize-on-startup: false
   base-url: "http://keycloak:8080"
   url: ${keycloak.base-url}/auth/
-  realm-url: ${keycloak.url}/realms/${keycloak.realm}
+  realm-url: ${keycloak.url}realms/${keycloak.realm}
   master-realm: "master"
   realm: "open-dme"
   client-id: admin-cli

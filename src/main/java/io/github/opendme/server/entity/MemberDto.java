@@ -14,14 +14,12 @@ public class MemberDto implements Serializable {
     private final Long departmentId;
     @NotEmpty(message = "Name can not be empty")
     private final String name;
-    private final List<Long> skillIds;
     @Pattern(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Email must be valid")
     private final String email;
 
-    public MemberDto(Long departmentId, String name, List<Long> skillIds, String email) {
+    public MemberDto(Long departmentId, String name, String email) {
         this.departmentId = departmentId;
         this.name = name;
-        this.skillIds = skillIds;
         this.email = email;
     }
 
@@ -32,10 +30,6 @@ public class MemberDto implements Serializable {
 
     public String getName() {
         return name;
-    }
-
-    public List<Long> getSkillIds() {
-        return skillIds;
     }
 
     public String getEmail() {
@@ -49,13 +43,12 @@ public class MemberDto implements Serializable {
         MemberDto entity = (MemberDto) o;
         return Objects.equals(this.departmentId, entity.departmentId) &&
                 Objects.equals(this.name, entity.name) &&
-                Objects.equals(this.skillIds, entity.skillIds) &&
                 Objects.equals(this.email, entity.email);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(departmentId, name, skillIds, email);
+        return Objects.hash(departmentId, name, email);
     }
 
     @Override
@@ -63,7 +56,6 @@ public class MemberDto implements Serializable {
         return getClass().getSimpleName() + "(" +
                 "departmentId = " + departmentId + ", " +
                 "name = " + name + ", " +
-                "skillIds = " + skillIds + ", " +
                 "email = " + email + ")";
     }
 }

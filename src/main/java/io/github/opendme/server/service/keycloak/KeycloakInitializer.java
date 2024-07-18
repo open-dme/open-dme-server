@@ -96,11 +96,8 @@ public class KeycloakInitializer {
                     log.error("Could not create or update sub groups for %s".formatted(group.getName()));
                     throw new RuntimeException("Could not create or update sub groups for %s: %s".formatted(group.getName(), res.getStatusInfo().getReasonPhrase()));
                 }
-
             }
-
         }
-
     }
 
     private void createGroup(GroupRepresentation group) {
@@ -139,7 +136,6 @@ public class KeycloakInitializer {
         } catch (RuntimeException e) {
             log.error("Could not create admin user", e);
         }
-
     }
 
     public void reset() {

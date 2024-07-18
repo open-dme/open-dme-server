@@ -3,6 +3,7 @@ package io.github.opendme.server.controller;
 import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Status;
+import io.github.opendme.server.service.KeycloakService;
 import io.github.opendme.server.service.MemberService;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class MemberController {
     private static final Logger log = LogManager.getLogger(MemberController.class);
     MemberService service;
+    KeycloakService keycloakService;
 
     public MemberController(MemberService service) {
         this.service = service;
@@ -31,6 +33,8 @@ public class MemberController {
     public Member create(@RequestBody @Valid MemberDto dto) {
         Member member = service.create(dto);
         log.atInfo().log("Member created");
+        keycloakService.createUser(member);
+        // TODO: Send creation mail with password c:
 
         return member;
     }

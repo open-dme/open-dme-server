@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -31,11 +32,22 @@ public class MemberService {
     }
 
     public void setMemberStatus(Long memberId, Status status) {
-        Member member = memberRepository.findById(memberId)
-                                        .orElseThrow(() -> new HttpClientErrorException(HttpStatusCode.valueOf(400), "Member not found."));
+        Member member = getMemberOrFail(memberId);
         member.setStatus(status);
 
         memberRepository.save(member);
+    }
+
+    public void setMemberAway(Long memberId, Date awayUntil) {
+        Member member = getMemberOrFail(memberId);
+        member.setAwayUntil(awayUntil);
+
+        memberRepository.save(member);
+    }
+
+    private Member getMemberOrFail(Long memberId) {
+        return memberRepository.findById(memberId)
+                               .orElseThrow(() -> new HttpClientErrorException(HttpStatusCode.valueOf(400), "Member not found."));
     }
 
     private void validate(MemberDto dto) {

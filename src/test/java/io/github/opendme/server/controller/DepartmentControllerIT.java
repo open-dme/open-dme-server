@@ -29,7 +29,6 @@ class DepartmentControllerIT extends ITBase {
     void setUp() {
         departmentRepository.deleteAll();
         memberRepository.deleteAll();
-
     }
 
     @Test

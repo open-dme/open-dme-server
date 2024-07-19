@@ -8,9 +8,6 @@ import io.github.opendme.server.service.MailService;
 import io.github.opendme.server.service.MemberService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
-
-import java.util.Date;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -22,6 +19,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -46,16 +45,16 @@ public class MemberController {
         log.atInfo().log("Member created");
         var password = keycloakService.createUser(member);
 
+        Map<String, Object> templateParameter = new HashMap<>();
+        templateParameter.put("email", member.getEmail());
+        templateParameter.put("name", member.getName());
+        templateParameter.put("password", password);
+        templateParameter.put("department", "Berlin-Mitte");
         mailService.sendMessageUsingThymeleafTemplate(
                 member.getEmail(),
                 "Initial Passwort Open DME",
                 "user-created.html",
-                Map.of(
-                        "name", member.getName(),
-                        "email", member.getEmail(),
-                        "password", password,
-                        "department", "Berlin-Mitte"
-                )
+                templateParameter
         );
 
         return member;
@@ -63,7 +62,6 @@ public class MemberController {
 
     @PatchMapping(value = "/member/{memberId}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
-    @RolesAllowed("admin")
     public void setStatus(@PathVariable Long memberId, @RequestBody Status status) {
         service.setMemberStatus(memberId, status);
         log.atInfo().log("Member status patched");

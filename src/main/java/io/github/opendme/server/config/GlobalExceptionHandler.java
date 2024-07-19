@@ -46,17 +46,6 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), ex.getStatusCode(), request);
     }
 
-    private record MissingRoles(String message, List<String> roles) {
-    }
-
-    private MissingRoles extractFrom(AuthorityAuthorizationDecision decision) {
-        var roles = decision.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList();
-        return new MissingRoles(
-                "You lack the following roles:",
-                roles
-        );
-    }
-
     @ExceptionHandler(AuthorizationDeniedException.class)
     protected ResponseEntity<Object> unauthenticatedHandler(
             AuthorizationDeniedException ex) {

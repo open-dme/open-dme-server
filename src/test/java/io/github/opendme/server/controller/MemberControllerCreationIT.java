@@ -1,7 +1,6 @@
 package io.github.opendme.server.controller;
 
 import io.github.opendme.ITBase;
-import io.github.opendme.SpringBootIntegrationTest;
 import io.github.opendme.server.entity.DepartmentDto;
 import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
@@ -21,27 +20,26 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.verify;
-import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
-@SpringBootIntegrationTest
 class MemberControllerCreationIT extends ITBase {
-    Long departmentId;
+    private Long departmentId;
     @Autowired
-    DepartmentService departmentService;
+    private DepartmentService departmentService;
     @Captor
-    ArgumentCaptor<Member> memberCaptor;
+    private ArgumentCaptor<Member> memberCaptor;
+    @Autowired
+    private ObjectMapper objectMapper;
 
-    AutoCloseable openMocks;
 
 
     @Container
@@ -55,12 +53,11 @@ class MemberControllerCreationIT extends ITBase {
         memberRepository.deleteAll();
         skillRepository.deleteAll();
 
-        openMocks = openMocks(this);
+        doReturn("password").when(keycloakService).createUser(any());
     }
 
     @AfterEach
-    void tearDown() throws Exception {
-        openMocks.close();
+    void tearDown() {
     }
 
     @Test
@@ -157,11 +154,7 @@ class MemberControllerCreationIT extends ITBase {
     }
 
     private MockHttpServletResponse sendCreateRequestWith(MemberDto memberDto) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(memberDto);
+        String requestJson = objectMapper.writeValueAsString(memberDto);
 
         return mvc.perform(
                           post("/member")

@@ -26,11 +26,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 
-@SpringBootIntegrationTest
+
 public class MemberControllerPatchIT extends ITBase {
-    Long memberId;
+    private Long memberId;
     @Autowired
-    MemberService memberService;
+    private MemberService memberService;
+
+    @Autowired
+    private ObjectMapper objectMapper;
+
 
     @Container
     @ServiceConnection
@@ -110,12 +114,8 @@ public class MemberControllerPatchIT extends ITBase {
                   .getResponse();
     }
 
-    private static String getRequestJson(Object status) throws JsonProcessingException {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(status);
+    private String getRequestJson(Object status) throws JsonProcessingException {
+        String requestJson = objectMapper.writeValueAsString(status);
         return requestJson;
     }
 }

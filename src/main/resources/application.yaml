@@ -33,6 +33,23 @@ spring:
         provider:
           open-dme:
             issuer-uri: "${keycloak.base-url}/realms/${keycloak.realm}"
+            token-uri: ${keycloak.realm-url}/protocol/openid-connect/token
+            authorization-uri: ${keycloak.realm-url}/protocol/openid-connect/auth
+            user-name-attribute: preferred_username
+            jwk-set-uri: ${keycloak.realm-url}/protocol/openid-connect/certs
+  mail:
+    host: mail
+    port: 1025
+    username: "test"
+    password: "test"
+    protocol: "smtp"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 
 # http://0.0.0.0:9080/realms/open-dme/.well-known/openid-configuration
 keycloak:

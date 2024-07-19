@@ -80,3 +80,12 @@ services:
   cache:
     image: redis
 
+  mail:
+    image: rnwood/smtp4dev
+    profiles:
+      - dev
+      - local
+    ports:
+      - "1080:80"
+      - "1025:25"
+

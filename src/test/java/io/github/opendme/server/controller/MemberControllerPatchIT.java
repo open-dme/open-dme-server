@@ -14,9 +14,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
+import org.testcontainers.shaded.com.fasterxml.jackson.core.JsonProcessingException;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
+
+import java.time.Instant;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
@@ -59,8 +63,21 @@ public class MemberControllerPatchIT extends ITBase {
 
     @Test
     @WithMockUser(roles = {"admin"})
-    void should_fail_on_wrong_status() throws Exception {
-        MockHttpServletResponse response = sendPatchStatusRequestWith("QUATSCH", memberId);
+    void should_patch_awayUntil() throws Exception {
+        Date awayUntil = Date.from(Instant.now().plusSeconds(60));
+
+        MockHttpServletResponse response = sendPatchAwayRequestWith(awayUntil, memberId);
+
+        assertThat(response.getStatus()).isEqualTo(202);
+        assertThat(memberRepository.findById(memberId).get().getAwayUntil().getTime()).isEqualTo(awayUntil.getTime());
+    }
+
+    @Test
+    @WithMockUser(roles = {"admin"})
+    void should_fail_on_wrong_member() throws Exception {
+        Date awayUntil = Date.from(Instant.now().plusSeconds(60));
+
+        MockHttpServletResponse response = sendPatchAwayRequestWith(awayUntil, 99L);
 
         assertThat(response.getStatus()).isEqualTo(400);
     }
@@ -70,11 +87,7 @@ public class MemberControllerPatchIT extends ITBase {
     }
 
     private MockHttpServletResponse sendPatchStatusRequestWith(Object status, Long memberId) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(status);
+        String requestJson = getRequestJson(status);
 
         return mvc.perform(
                           patch("/member/{memberId}/status", memberId)
@@ -83,5 +96,26 @@ public class MemberControllerPatchIT extends ITBase {
                                   .content(requestJson))
                   .andReturn()
                   .getResponse();
+    }
+
+    private MockHttpServletResponse sendPatchAwayRequestWith(Object awayUntil, Long memberId) throws Exception {
+        String requestJson = getRequestJson(awayUntil);
+
+        return mvc.perform(
+                          patch("/member/{memberId}/awayUntil", memberId)
+                                  .contentType(MediaType.APPLICATION_JSON)
+                                  .with(csrf())
+                                  .content(requestJson))
+                  .andReturn()
+                  .getResponse();
+    }
+
+    private static String getRequestJson(Object status) throws JsonProcessingException {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
+        mapper.configure(SerializationFeature.FAIL_ON_EMPTY_BEANS, false);
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(status);
+        return requestJson;
     }
 }

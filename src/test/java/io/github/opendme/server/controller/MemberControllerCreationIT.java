@@ -7,9 +7,12 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Skill;
 import io.github.opendme.server.service.DepartmentService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
 import org.springframework.http.MediaType;
@@ -25,6 +28,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.verify;
+import static org.mockito.MockitoAnnotations.openMocks;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 
@@ -33,6 +38,11 @@ class MemberControllerCreationIT extends ITBase {
     Long departmentId;
     @Autowired
     DepartmentService departmentService;
+    @Captor
+    ArgumentCaptor<Member> memberCaptor;
+
+    AutoCloseable openMocks;
+
 
     @Container
     @ServiceConnection
@@ -44,15 +54,24 @@ class MemberControllerCreationIT extends ITBase {
         departmentRepository.deleteAll();
         memberRepository.deleteAll();
         skillRepository.deleteAll();
+
+        openMocks = openMocks(this);
+    }
+
+    @AfterEach
+    void tearDown() throws Exception {
+        openMocks.close();
     }
 
     @Test
     @WithMockUser(roles = {"admin"})
     void should_create_minimal_member() throws Exception {
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe",  "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(null, "Jon Doe", "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
+        verify(keycloakService).createUser(memberCaptor.capture());
+        assertThat(memberCaptor.getValue().getName()).isEqualTo("Jon Doe");
     }
 
     @Test
@@ -60,11 +79,13 @@ class MemberControllerCreationIT extends ITBase {
     void should_create_member_with_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe",  "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(departmentId, "Jon Doe", "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
         assertThat(response.getContentAsString()).contains(departmentId.toString());
+        verify(keycloakService).createUser(memberCaptor.capture());
+        assertThat(memberCaptor.getValue().getName()).isEqualTo("Jon Doe");
     }
 
     @Test
@@ -72,7 +93,7 @@ class MemberControllerCreationIT extends ITBase {
     void should_reject_invalid_department() throws Exception {
         createDepartment();
 
-        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(666L, "Jon Doe",  "valid@mail.com"));
+        MockHttpServletResponse response = sendCreateRequestWith(new MemberDto(666L, "Jon Doe", "valid@mail.com"));
 
         assertThat(response.getStatus()).isEqualTo(422);
     }
@@ -87,6 +108,8 @@ class MemberControllerCreationIT extends ITBase {
         assertThat(response.getStatus()).isEqualTo(201);
         assertThat(response.getContentAsString()).contains("Jon Doe");
         assertThat(response.getContentAsString()).contains(departmentId.toString());
+        verify(keycloakService).createUser(memberCaptor.capture());
+        assertThat(memberCaptor.getValue().getName()).isEqualTo("Jon Doe");
     }
 
     @Test

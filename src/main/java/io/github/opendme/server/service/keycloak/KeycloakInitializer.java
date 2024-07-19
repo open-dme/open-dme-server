@@ -15,7 +15,9 @@ import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.slf4j.LoggerFactory.getLogger;
 
@@ -26,6 +28,7 @@ public class KeycloakInitializer {
     private final AppConfig appConfig;
     private final KeycloakConfig keycloakConfig;
     private final Keycloak keycloak;
+    private final Map<String, GroupRepresentation> groups = new HashMap<>();
 
     public KeycloakInitializer(AppConfig appConfig,
                                KeycloakConfig keycloakConfig,
@@ -81,6 +84,7 @@ public class KeycloakInitializer {
                 createdGroup = realmReq().getGroupByPath("/" + group.getName());
             }
             updateSubGroups(createdGroup, group.getSubGroups());
+            groups.put(group.getName(), createdGroup);
         }
     }
 
@@ -144,6 +148,10 @@ public class KeycloakInitializer {
         } catch (NotFoundException e) {
             log.error("Failed to reset Keycloak", e);
         }
+    }
+
+    public GroupRepresentation getDefaultGroup(String name) {
+        return groups.get(name);
     }
 
     private record KeycloakDefaults(List<GroupRepresentation> groups, List<RoleRepresentation> roles) {

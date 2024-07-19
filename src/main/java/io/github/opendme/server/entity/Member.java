@@ -10,6 +10,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 
+import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
@@ -28,6 +29,8 @@ public class Member {
     private String email;
     @Enumerated
     private Status status;
+    private Date awayUntil;
+
 
     public Member() {
     }
@@ -69,6 +72,10 @@ public class Member {
         return status;
     }
 
+    public Date getAwayUntil() {
+        return awayUntil;
+    }
+
     public void setDepartment(Department department) {
         this.department = department;
     }
@@ -89,16 +96,20 @@ public class Member {
         this.status = status;
     }
 
+    public void setAwayUntil(Date awayUntil) {
+        this.awayUntil = awayUntil;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Member member = (Member) o;
-        return Objects.equals(id, member.id) && Objects.equals(department, member.department) && Objects.equals(name, member.name) && Objects.equals(skills, member.skills) && Objects.equals(email, member.email) && status == member.status;
+        return Objects.equals(id, member.id) && Objects.equals(department, member.department) && Objects.equals(name, member.name) && Objects.equals(skills, member.skills) && Objects.equals(email, member.email) && status == member.status && Objects.equals(awayUntil, member.awayUntil);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, department, name, skills, email, status);
+        return Objects.hash(id, department, name, skills, email, status, awayUntil);
     }
 }

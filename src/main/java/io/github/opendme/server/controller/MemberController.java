@@ -11,8 +11,6 @@ import jakarta.validation.Valid;
 
 import java.util.Date;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
@@ -23,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Map;
 
 @RestController
 public class MemberController {
@@ -49,10 +49,12 @@ public class MemberController {
         mailService.sendMessageUsingThymeleafTemplate(
                 member.getEmail(),
                 "Initial Passwort Open DME",
-                "template-thymeleaf.html",
-                Map.of("recipientName", member.getName(),
+                "user-created.html",
+                Map.of(
+                        "name", member.getName(),
                         "email", member.getEmail(),
-                        "password", password
+                        "password", password,
+                        "department", "Berlin-Mitte"
                 )
         );
 

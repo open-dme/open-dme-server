@@ -81,14 +81,11 @@ services:
     image: redis
 
   mail:
-    image: maildev/maildev
+    image: rnwood/smtp4dev
     profiles:
       - dev
       - local
-    environment:
-      MAILDEV_INCOMING_USER: "test"
-      MAILDEV_INCOMING_PASS: "test"
     ports:
-      - "1080:1080"
-      - "1025:1025"
+      - "1080:80"
+      - "1025:25"
 

@@ -1,15 +1,25 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="de">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
 </head>
 <body>
-<p th:text="${recipientName}"></p>
-Du kannst die nun mittels folgenden Daten einloggen.
+<div>
+    <p>
+        Hi <span th:text="${name}">User</span>,
 
-<label for="email">E-Mail:</label>
-<p id="email" th:text="${email}"></p>
-<label for="password">Passwort:</label>
-<p id="password" th:text="${password}"></p>
+        Willkommen bei Open-DME.
+        Im Namen der Feuerwachen <span th:text="department">Departement</span> wurde für dich ein Account mit folgenden Logindaten  erstellt.
+
+        <label for="email">Username:</label> <span id="email" th:text="${email}">"User"</span>
+
+        <label for="password">Passwort:</label> <span id="password" th:text="${password}">"Password"</span>
+    </p>
+    <p>
+        Vielen Dank und viel Spaß bei der Nutzung,<br/>
+        Deine Feuerwache <span th:text="departement">"Feuerwache"</span>
+    </p>
+
+</div>
 </body>
 </html>

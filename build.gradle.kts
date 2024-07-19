@@ -32,6 +32,7 @@ dependencies {
 	implementation("org.springframework.security:spring-security-oauth2-jose")
 
     implementation("org.springframework.boot:spring-boot-starter-mail")
+    implementation("org.springframework:spring-context-support")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
 
 

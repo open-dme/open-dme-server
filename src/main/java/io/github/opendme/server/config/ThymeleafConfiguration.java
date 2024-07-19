@@ -3,9 +3,9 @@ package io.github.opendme.server.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.thymeleaf.spring6.SpringTemplateEngine;
-import org.thymeleaf.spring6.templateresolver.SpringResourceTemplateResolver;
-import org.thymeleaf.spring6.view.ThymeleafViewResolver;
 import org.thymeleaf.templatemode.TemplateMode;
+import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
+import org.thymeleaf.templateresolver.ITemplateResolver;
 
 @Configuration
 public class ThymeleafConfiguration {
@@ -17,12 +17,13 @@ public class ThymeleafConfiguration {
     }
 
     @Bean
-    public SpringResourceTemplateResolver thymeleafTemplateResolver() {
-        SpringResourceTemplateResolver templateResolver = new SpringResourceTemplateResolver();
-        templateResolver.setPrefix("/mail-templates/");
+    public ITemplateResolver thymeleafTemplateResolver() {
+        ClassLoaderTemplateResolver templateResolver = new ClassLoaderTemplateResolver();
+        templateResolver.setPrefix("mail-templates/");
         templateResolver.setSuffix(".html");
         templateResolver.setTemplateMode(TemplateMode.HTML);
         templateResolver.setCharacterEncoding("UTF-8");
         return templateResolver;
     }
+
 }

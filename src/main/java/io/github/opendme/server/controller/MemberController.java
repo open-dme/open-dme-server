@@ -4,20 +4,18 @@ import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberDto;
 import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.service.KeycloakService;
+import io.github.opendme.server.service.MailService;
 import io.github.opendme.server.service.MemberService;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 
-import java.security.Principal;
+import java.util.Date;
 
-import java.util.Collection;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,17 +24,17 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Date;
-
 @RestController
 public class MemberController {
     private static final Logger log = LogManager.getLogger(MemberController.class);
-    MemberService service;
-    KeycloakService keycloakService;
+    private final MemberService service;
+    private final KeycloakService keycloakService;
+    private final MailService mailService;
 
-    public MemberController(MemberService service, KeycloakService keycloakService) {
+    public MemberController(MemberService service, KeycloakService keycloakService, MailService mailService) {
         this.service = service;
         this.keycloakService = keycloakService;
+        this.mailService = mailService;
     }
 
     @PostMapping(value = "/member", produces = "application/json;charset=UTF-8")
@@ -47,7 +45,16 @@ public class MemberController {
         Member member = service.create(dto);
         log.atInfo().log("Member created");
         var password = keycloakService.createUser(member);
-        // TODO: Send creation mail with password c:
+
+        mailService.sendMessageUsingThymeleafTemplate(
+                member.getEmail(),
+                "Initial Passwort Open DME",
+                "template-thymeleaf.html",
+                Map.of("recipientName", member.getName(),
+                        "email", member.getEmail(),
+                        "password", password
+                )
+        );
 
         return member;
     }

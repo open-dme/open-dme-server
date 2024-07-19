@@ -80,3 +80,15 @@ services:
   cache:
     image: redis
 
+  mail:
+    image: maildev/maildev
+    profiles:
+      - dev
+      - local
+    environment:
+      MAILDEV_INCOMING_USER: "test"
+      MAILDEV_INCOMING_PASS: "test"
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+

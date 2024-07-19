@@ -1,6 +1,18 @@
 spring:
   datasource:
     url: "jdbc:postgresql://localhost:5433/postgres"
+  mail:
+    host: 0.0.0.0
+    port: 1025
+    username: "test"
+    password: "test"
+    protocol: "smtp"
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 keycloak:
   base-url: "http://0.0.0.0:9080"

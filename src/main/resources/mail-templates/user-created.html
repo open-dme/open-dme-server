@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+</head>
+<body>
+<p th:text="${recipientName}"></p>
+Du kannst die nun mittels folgenden Daten einloggen.
+
+<label for="email">E-Mail:</label>
+<p id="email" th:text="${email}"></p>
+<label for="password">Passwort:</label>
+<p id="password" th:text="${password}"></p>
+</body>
+</html>

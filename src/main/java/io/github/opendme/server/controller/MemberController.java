@@ -34,7 +34,7 @@ public class MemberController {
     public Member create(@RequestBody @Valid MemberDto dto) {
         Member member = service.create(dto);
         log.atInfo().log("Member created");
-        keycloakService.createUser(member);
+        var password = keycloakService.createUser(member);
         // TODO: Send creation mail with password c:
 
         return member;

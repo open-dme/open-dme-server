@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.Date;
+
 @RestController
 public class MemberController {
     private static final Logger log = LogManager.getLogger(MemberController.class);
@@ -40,11 +42,19 @@ public class MemberController {
         return member;
     }
 
-    @PatchMapping(value = "/member/{memberId}/status", produces = "application/json;charset=UTF-8")
+    @PatchMapping(value = "/member/{memberId}/status")
     @ResponseStatus(HttpStatus.ACCEPTED)
     public void setStatus(@PathVariable Long memberId, @RequestBody Status status) {
         service.setMemberStatus(memberId, status);
         log.atInfo().log("Member status patched");
+
+    }
+
+    @PatchMapping(value = "/member/{memberId}/awayUntil")
+    @ResponseStatus(HttpStatus.ACCEPTED)
+    public void setStatus(@PathVariable Long memberId, @RequestBody Date awayUntil) {
+        service.setMemberAway(memberId, awayUntil);
+        log.atInfo().log("Member awayUntil patched");
 
     }
 }

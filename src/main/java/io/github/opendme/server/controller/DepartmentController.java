@@ -3,10 +3,12 @@ package io.github.opendme.server.controller;
 import io.github.opendme.server.entity.Department;
 import io.github.opendme.server.entity.DepartmentDto;
 import io.github.opendme.server.service.DepartmentService;
+import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -25,6 +27,7 @@ public class DepartmentController {
     @PostMapping(value = "/department", produces = "application/json;charset=UTF-8")
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
+    @RolesAllowed("admin")
     public Department create(@RequestBody @Valid DepartmentDto department) {
         Department department1 = service.create(department);
         log.atInfo().log("Department created");

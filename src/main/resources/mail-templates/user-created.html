@@ -9,7 +9,7 @@
         Hi <span th:text="${name}">User</span>,
 
         Willkommen bei Open-DME.
-        Im Namen der Feuerwachen <span th:text="department">Departement</span> wurde für dich ein Account mit folgenden Logindaten  erstellt.
+        Im Namen der Feuerwachen <span th:text="${department}">Departement</span> wurde für dich ein Account mit folgenden Logindaten  erstellt.
 
         <label for="email">Username:</label> <span id="email" th:text="${email}">"User"</span>
 
@@ -17,7 +17,7 @@
     </p>
     <p>
         Vielen Dank und viel Spaß bei der Nutzung,<br/>
-        Deine Feuerwache <span th:text="department">"Feuerwache"</span>
+        Deine Feuerwache <span th:text="${department}">"Feuerwache"</span>
     </p>
 
 </div>

@@ -41,7 +41,7 @@ public class CallService {
         else
             vehicles = vehicleRepository.findAllByIdInAndDepartmentIdIs(vehicleIds, departmentId);
 
-        if (vehicles.isEmpty())
+        if (isEmpty(vehicles))
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Could not fetch vehicle.");
         return vehicles;
     }

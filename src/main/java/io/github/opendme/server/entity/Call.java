@@ -6,8 +6,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 
 import java.util.Date;
 import java.util.List;
@@ -24,11 +24,14 @@ public class Call {
     private Long id;
     @Column(nullable = false)
     private Date createdAt;
-    @ManyToOne(fetch = LAZY, cascade = REMOVE)
+    @OneToOne(optional = false, fetch = LAZY)
     private Department department;
 
     @OneToMany(fetch = LAZY, cascade = REMOVE)
     private List<Vehicle> vehicles;
+
+    public Call() {
+    }
 
     public Call(Long id, Date createdAt, Department department, List<Vehicle> vehicles) {
         this.id = id;

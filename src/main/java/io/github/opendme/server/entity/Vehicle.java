@@ -5,9 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
 
-import static jakarta.persistence.CascadeType.REMOVE;
+import java.util.Objects;
 
 @Entity
 public class Vehicle {
@@ -17,7 +17,7 @@ public class Vehicle {
     Long id;
     String name;
     Integer seats;
-    @ManyToOne(cascade = REMOVE, optional = false)
+    @OneToOne(optional = false)
     private Department department;
 
     public Vehicle() {
@@ -60,5 +60,18 @@ public class Vehicle {
 
     public void setDepartment(Department department) {
         this.department = department;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Vehicle vehicle = (Vehicle) o;
+        return Objects.equals(id, vehicle.id) && Objects.equals(name, vehicle.name) && Objects.equals(seats, vehicle.seats) && Objects.equals(department, vehicle.department);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, seats, department);
     }
 }

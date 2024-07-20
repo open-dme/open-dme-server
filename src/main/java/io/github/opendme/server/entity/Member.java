@@ -21,7 +21,7 @@ public class Member {
     @Id
     @GeneratedValue
     private Long id;
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Department department;
     private String name;
     @OneToMany(mappedBy = "member", cascade = CascadeType.REMOVE)

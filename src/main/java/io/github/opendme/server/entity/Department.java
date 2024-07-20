@@ -20,7 +20,7 @@ public class Department {
     private Long id;
     private String name;
 
-    @OneToOne(optional = false)
+    @OneToOne(optional = true)
     private Member admin;
 
     public Department() {
@@ -45,6 +45,10 @@ public class Department {
 
     public Member getAdmin() {
         return admin;
+    }
+
+    public void setAdmin(Member admin) {
+        this.admin = admin;
     }
 
     @Override

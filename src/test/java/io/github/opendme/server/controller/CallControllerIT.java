@@ -16,7 +16,6 @@ import org.springframework.boot.testcontainers.service.connection.ServiceConnect
 import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.test.context.support.WithMockUser;
-import org.springframework.transaction.annotation.Transactional;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,14 +43,11 @@ class CallControllerIT extends ITBase {
 
     @BeforeEach
     void setUp() {
-        for (Department dept : departmentRepository.findAll()) {
-            dept.setAdmin(null);
-            departmentRepository.save(dept);
-        }
         callRepository.deleteAll();
-        memberRepository.deleteAll();
         vehicleRepository.deleteAll();
+        memberRepository.removeAllDepartments();
         departmentRepository.deleteAll();
+        memberRepository.deleteAll();
     }
 
     @Test

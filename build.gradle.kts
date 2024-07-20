@@ -2,6 +2,7 @@ plugins {
     java
     alias(libs.plugins.spring.boot)
     alias(libs.plugins.spring.dependencymanagement)
+    kotlin("jvm") version "2.0.0"
 }
 
 group = "io.github.opendme"
@@ -18,6 +19,7 @@ repositories {
 }
 
 dependencies {
+    implementation("org.jetbrains.kotlin:kotlin-reflect")
     implementation(libs.driver.postgres)
 	implementation("org.keycloak", "keycloak-admin-client", "25.0.1")
     implementation("org.springframework.boot:spring-boot-starter-actuator")

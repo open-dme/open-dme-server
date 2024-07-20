@@ -1,8 +1,10 @@
 package io.github.opendme;
 
+import io.github.opendme.server.entity.CallRepository;
 import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.SkillRepository;
+import io.github.opendme.server.entity.VehicleRepository;
 import io.github.opendme.server.service.KeycloakService;
 import io.github.opendme.server.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +21,11 @@ public class ITBase {
     @Autowired
     protected MemberRepository memberRepository;
     @Autowired
+    protected VehicleRepository vehicleRepository;
+    @Autowired
     protected SkillRepository skillRepository;
+    @Autowired
+    protected CallRepository callRepository;
 
     @MockBean
     protected InMemoryClientRegistrationRepository inMemoryClientRegistrationRepository;

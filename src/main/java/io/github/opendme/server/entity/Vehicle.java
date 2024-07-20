@@ -5,6 +5,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
+
+import static jakarta.persistence.CascadeType.REMOVE;
 
 @Entity
 public class Vehicle {
@@ -14,14 +17,17 @@ public class Vehicle {
     Long id;
     String name;
     Integer seats;
+    @ManyToOne(cascade = REMOVE, optional = false)
+    private Department department;
 
     public Vehicle() {
     }
 
-    public Vehicle(Long id, String name, Integer seats) {
+    public Vehicle(Long id, String name, Integer seats, Department department) {
         this.id = id;
         this.name = name;
         this.seats = seats;
+        this.department = department;
     }
 
     public Long getId() {
@@ -36,6 +42,10 @@ public class Vehicle {
         return name;
     }
 
+    public Department getDepartment() {
+        return department;
+    }
+
     public void setName(String name) {
         this.name = name;
     }
@@ -46,5 +56,9 @@ public class Vehicle {
 
     public void setSeats(Integer seats) {
         this.seats = seats;
+    }
+
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 }

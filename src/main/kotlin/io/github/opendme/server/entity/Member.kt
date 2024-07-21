@@ -10,7 +10,7 @@ import java.util.*
 data class Member(
     @Id @GeneratedValue
     var id: Long? = null,
-    @ManyToOne(cascade = [CascadeType.REMOVE])
+    @ManyToOne
     var department: Department? = null,
     var name: String? = null,
 

@@ -3,6 +3,7 @@ package io.github.opendme.server.entity
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import jakarta.persistence.*
+import java.time.LocalDateTime
 import java.util.*
 
 @Entity
@@ -13,8 +14,8 @@ class Call {
     var id: Long? = null
 
     @Column(nullable = false)
-    @Temporal(TemporalType.DATE)
-    var createdAt: Date? = null
+    @Temporal(TemporalType.TIMESTAMP)
+    var createdAt: LocalDateTime? = null
 
     @OneToOne(optional = false, fetch = FetchType.LAZY)
     var department: Department? = null
@@ -27,7 +28,7 @@ class Call {
 
     constructor()
 
-    constructor(id: Long?, createdAt: Date?, department: Department?, vehicles: List<Vehicle>?) {
+    constructor(id: Long?, createdAt: LocalDateTime?, department: Department?, vehicles: List<Vehicle>?) {
         this.id = id
         this.createdAt = createdAt
         this.department = department
@@ -38,7 +39,8 @@ class Call {
         if (this === o) return true
         if (o == null || javaClass != o.javaClass) return false
         val call = o as Call
-        return id == call.id && createdAt == call.createdAt && department?.id == call.department?.id && vehicles == call.vehicles
+        return id == call.id && createdAt == call.createdAt && department?.id == call.department?.id
+                && vehicles?.map { Vehicle::id } == call.vehicles?.map { Vehicle::id }
     }
 
     override fun hashCode(): Int {

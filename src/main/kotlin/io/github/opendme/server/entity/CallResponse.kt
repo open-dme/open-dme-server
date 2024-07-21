@@ -3,7 +3,7 @@ package io.github.opendme.server.entity
 import com.fasterxml.jackson.annotation.JsonIdentityInfo
 import com.fasterxml.jackson.annotation.ObjectIdGenerators
 import jakarta.persistence.*
-import java.util.*
+import java.time.LocalDateTime
 
 @Entity
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator::class, property = "id")
@@ -12,7 +12,7 @@ class CallResponse(
     @GeneratedValue
     var id: Long? = null,
     @Column(nullable = false)
-    var createdAt: Date? = null,
+    var createdAt: LocalDateTime? = null,
     @ManyToOne(optional = false)
     var member: Member? = null,
     @ManyToOne(cascade = [CascadeType.REMOVE], optional = false)

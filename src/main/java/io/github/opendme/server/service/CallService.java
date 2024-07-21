@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -39,7 +39,7 @@ public class CallService {
     public Call createFrom(Long departmentId, List<Long> vehicleIds) {
         List<Vehicle> vehicles = getVehicles(departmentId, vehicleIds);
         Department department = getDepartment(departmentId);
-        return callRepository.save(new Call(null, new Date(), department, vehicles));
+        return callRepository.save(new Call(null, LocalDateTime.now(), department, vehicles));
     }
 
     public void createResponse(Long callId, Long memberId) {
@@ -51,7 +51,7 @@ public class CallService {
         if (member.getDepartment() == null || !member.getDepartment().equals(call.getDepartment()))
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Call is not from member department.");
 
-        callResponseRepository.save(new CallResponse(null, new Date(), member, call));
+        callResponseRepository.save(new CallResponse(null, LocalDateTime.now(), member, call));
     }
 
     private List<Vehicle> getVehicles(Long departmentId, List<Long> vehicleIds) {

@@ -145,7 +145,7 @@ class CallControllerIT extends ITBase {
         assertThat(response.getStatus()).isEqualTo(201);
         List<CallResponse> allResponse = callResponseRepository.findAll();
         assertThat(allResponse).hasSize(1);
-        assertThat(allResponse.getFirst().getMember()).isEqualTo(member);
+        assertThat(allResponse.getFirst().getMember().getId()).isEqualTo(member.getId());
         assertThat(allResponse.getFirst().getCall()).isEqualTo(call);
         assertThat(allResponse.getFirst().getCreatedAt()).isCloseTo(LocalDateTime.now(), within(100, ChronoUnit.MILLIS));
     }
@@ -178,7 +178,7 @@ class CallControllerIT extends ITBase {
 
     private void createVehicle() {
         vehicles.add(vehicleRepository
-                .save(new Vehicle(null, "LHF", 6, department)));
+                .save(new Vehicle(null, randomAlphanumeric(8), 6, department)));
     }
 
     private void createMember() {

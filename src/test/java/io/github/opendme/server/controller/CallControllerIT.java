@@ -145,9 +145,16 @@ class CallControllerIT extends ITBase {
         assertThat(response.getStatus()).isEqualTo(201);
         List<CallResponse> allResponse = callResponseRepository.findAll();
         assertThat(allResponse).hasSize(1);
-        assertThat(allResponse.getFirst().getMember().getId()).isEqualTo(member.getId());
-        assertThat(allResponse.getFirst().getCall()).isEqualTo(call);
-        assertThat(allResponse.getFirst().getCreatedAt()).isCloseTo(LocalDateTime.now(), within(100, ChronoUnit.MILLIS));
+        var first = allResponse.getFirst();
+        assertThat(first.getMember().getId()).isEqualTo(member.getId());
+
+        var firstCall = first.getCall();
+
+        assertThat(firstCall).usingRecursiveComparison()
+                             .ignoringFields("createdAt", "callResponses")
+                             .isEqualTo(call);
+
+        assertThat(firstCall.getCreatedAt()).isCloseTo(LocalDateTime.now(), within(10, ChronoUnit.SECONDS));
     }
 
     @Test

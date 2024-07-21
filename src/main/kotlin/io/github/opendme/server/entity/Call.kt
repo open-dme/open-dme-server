@@ -1,87 +1,47 @@
-package io.github.opendme.server.entity;
+package io.github.opendme.server.entity
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
-
-import static jakarta.persistence.CascadeType.REMOVE;
-import static jakarta.persistence.FetchType.LAZY;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo
+import com.fasterxml.jackson.annotation.ObjectIdGenerators
+import jakarta.persistence.*
+import java.util.*
 
 @Entity
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-public class Call {
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator::class, property = "id")
+class Call {
     @Id
     @GeneratedValue
-    private Long id;
+    var id: Long? = null
+
     @Column(nullable = false)
-    private Date createdAt;
-    @OneToOne(optional = false, fetch = LAZY)
-    private Department department;
+    @Temporal(TemporalType.DATE)
+    var createdAt: Date? = null
 
-    @OneToMany(fetch = LAZY, cascade = REMOVE)
-    private List<Vehicle> vehicles;
+    @OneToOne(optional = false, fetch = FetchType.LAZY)
+    var department: Department? = null
 
-    public Call() {
+    @OneToMany(fetch = FetchType.LAZY, cascade = [CascadeType.REMOVE])
+    var vehicles: List<Vehicle>? = null
+
+    @OneToMany(mappedBy = "call", cascade = [CascadeType.REMOVE], orphanRemoval = true, fetch = FetchType.LAZY)
+    var callResponses: List<CallResponse>? = null
+
+    constructor()
+
+    constructor(id: Long?, createdAt: Date?, department: Department?, vehicles: List<Vehicle>?) {
+        this.id = id
+        this.createdAt = createdAt
+        this.department = department
+        this.vehicles = vehicles
     }
 
-    public Call(Long id, Date createdAt, Department department, List<Vehicle> vehicles) {
-        this.id = id;
-        this.createdAt = createdAt;
-        this.department = department;
-        this.vehicles = vehicles;
+    override fun equals(o: Any?): Boolean {
+        if (this === o) return true
+        if (o == null || javaClass != o.javaClass) return false
+        val call = o as Call
+        return id == call.id && createdAt == call.createdAt && department?.id == call.department?.id && vehicles == call.vehicles
     }
 
-    public List<Vehicle> getVehicles() {
-        return vehicles;
-    }
-
-    public void setVehicles(List<Vehicle> vehicles) {
-        this.vehicles = vehicles;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Department getDepartment() {
-        return department;
-    }
-
-    public void setDepartment(Department department) {
-        this.department = department;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Call call = (Call) o;
-        return Objects.equals(id, call.id) && Objects.equals(createdAt, call.createdAt) && Objects.equals(department, call.department) && Objects.equals(vehicles, call.vehicles);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, createdAt, department, vehicles);
+    override fun hashCode(): Int {
+        return Objects.hash(id, createdAt, department, vehicles)
     }
 }

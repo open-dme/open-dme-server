@@ -2,8 +2,12 @@ package io.github.opendme.server.service;
 
 import io.github.opendme.server.entity.Call;
 import io.github.opendme.server.entity.CallRepository;
+import io.github.opendme.server.entity.CallResponse;
+import io.github.opendme.server.entity.CallResponseRepository;
 import io.github.opendme.server.entity.Department;
 import io.github.opendme.server.entity.DepartmentRepository;
+import io.github.opendme.server.entity.Member;
+import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.Vehicle;
 import io.github.opendme.server.entity.VehicleRepository;
 import org.springframework.http.HttpStatusCode;
@@ -21,17 +25,33 @@ public class CallService {
     CallRepository callRepository;
     VehicleRepository vehicleRepository;
     DepartmentRepository departmentRepository;
+    CallResponseRepository callResponseRepository;
+    MemberRepository memberRepository;
 
-    public CallService(CallRepository callRepository, VehicleRepository vehicleRepository, DepartmentRepository departmentRepository) {
+    public CallService(CallRepository callRepository, VehicleRepository vehicleRepository, DepartmentRepository departmentRepository, CallResponseRepository callResponseRepository, MemberRepository memberRepository) {
         this.callRepository = callRepository;
         this.vehicleRepository = vehicleRepository;
         this.departmentRepository = departmentRepository;
+        this.callResponseRepository = callResponseRepository;
+        this.memberRepository = memberRepository;
     }
 
     public Call createFrom(Long departmentId, List<Long> vehicleIds) {
         List<Vehicle> vehicles = getVehicles(departmentId, vehicleIds);
         Department department = getDepartment(departmentId);
         return callRepository.save(new Call(null, new Date(), department, vehicles));
+    }
+
+    public void createResponse(Long callId, Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new HttpClientErrorException(HttpStatusCode.valueOf(422), "Could not fetch member."));
+        Call call = callRepository.findById(callId).orElseThrow(() ->
+                new HttpClientErrorException(HttpStatusCode.valueOf(422), "Could not fetch call."));
+
+        if (member.getDepartment() == null || !member.getDepartment().equals(call.getDepartment()))
+            throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Call is not from member department.");
+
+        callResponseRepository.save(new CallResponse(null, new Date(), member, call));
     }
 
     private List<Vehicle> getVehicles(Long departmentId, List<Long> vehicleIds) {

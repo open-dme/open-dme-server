@@ -94,3 +94,6 @@ springdoc:
 call-service:
   auto-dispatch-window: PT5M
   auto-dispatch-threshold: 3
+
+fcm:
+  service-account: "classpath:firebase-service-account.json"

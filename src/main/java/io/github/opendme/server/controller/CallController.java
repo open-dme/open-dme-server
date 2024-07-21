@@ -3,6 +3,7 @@ package io.github.opendme.server.controller;
 import io.github.opendme.server.entity.Call;
 import io.github.opendme.server.entity.CallCreationDto;
 import io.github.opendme.server.service.CallService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.annotation.security.RolesAllowed;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -26,6 +27,7 @@ public class CallController {
         return callService.createFrom(dto.getDepartmentId(), dto.getVehicleIds());
     }
 
+    @Operation(summary = "Save the response to a call. Also sets the member to the state DISPATCHED.")
     @PostMapping("/call/{callId}/response")
     @ResponseStatus(HttpStatus.CREATED)
     void create(@PathVariable Long callId, @RequestBody Long memberId) {

@@ -7,6 +7,7 @@ import io.github.opendme.server.entity.CallResponse;
 import io.github.opendme.server.entity.Department;
 import io.github.opendme.server.entity.DepartmentDto;
 import io.github.opendme.server.entity.Member;
+import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.entity.Vehicle;
 import io.github.opendme.server.service.DepartmentService;
 import org.apache.logging.log4j.LogManager;
@@ -147,6 +148,19 @@ class CallControllerIT extends ITBase {
         assertThat(allResponse.getFirst().getMember()).isEqualTo(member);
         assertThat(allResponse.getFirst().getCall()).isEqualTo(call);
         assertThat(allResponse.getFirst().getCreatedAt()).isCloseTo(LocalDateTime.now(), within(100, ChronoUnit.MILLIS));
+    }
+
+    @Test
+    @WithMockUser
+    void should_set_dispatched_state_on_create_call_response() throws Exception {
+        createCall();
+        createMember();
+
+        MockHttpServletResponse response = sendCreateResponseRequestWith(call.getId(), member.getId());
+
+        assertThat(response.getStatus()).isEqualTo(201);
+        Member savedMember = memberRepository.findById(member.getId()).get();
+        assertThat(savedMember.getStatus()).isEqualTo(Status.DISPATCHED);
     }
 
     private void createCall() {

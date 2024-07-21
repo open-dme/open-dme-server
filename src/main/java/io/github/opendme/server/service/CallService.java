@@ -8,6 +8,7 @@ import io.github.opendme.server.entity.Department;
 import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.Member;
 import io.github.opendme.server.entity.MemberRepository;
+import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.entity.Vehicle;
 import io.github.opendme.server.entity.VehicleRepository;
 import org.springframework.http.HttpStatusCode;
@@ -52,6 +53,9 @@ public class CallService {
             throw new HttpClientErrorException(HttpStatusCode.valueOf(422), "Call is not from member department.");
 
         callResponseRepository.save(new CallResponse(null, LocalDateTime.now(), member, call));
+
+        member.setStatus(Status.DISPATCHED);
+        memberRepository.save(member);
     }
 
     private List<Vehicle> getVehicles(Long departmentId, List<Long> vehicleIds) {

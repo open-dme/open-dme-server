@@ -1,6 +1,7 @@
 package io.github.opendme;
 
 import io.github.opendme.server.entity.CallRepository;
+import io.github.opendme.server.entity.CallResponseRepository;
 import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.SkillRepository;
@@ -26,6 +27,8 @@ public class ITBase {
     protected SkillRepository skillRepository;
     @Autowired
     protected CallRepository callRepository;
+    @Autowired
+    protected CallResponseRepository callResponseRepository;
 
     @MockBean
     protected InMemoryClientRegistrationRepository inMemoryClientRegistrationRepository;

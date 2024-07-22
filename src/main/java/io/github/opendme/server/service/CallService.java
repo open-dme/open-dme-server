@@ -15,6 +15,7 @@ import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -23,11 +24,14 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 public class CallService {
+    public static final Duration AUTO_DISPATCH_WINDOW = Duration.ofMinutes(5);
+    public static final int AUTO_DISPATCH_THRESHOLD = 3;
     CallRepository callRepository;
     VehicleRepository vehicleRepository;
     DepartmentRepository departmentRepository;
     CallResponseRepository callResponseRepository;
     MemberRepository memberRepository;
+
 
     public CallService(CallRepository callRepository, VehicleRepository vehicleRepository, DepartmentRepository departmentRepository, CallResponseRepository callResponseRepository, MemberRepository memberRepository) {
         this.callRepository = callRepository;
@@ -56,6 +60,31 @@ public class CallService {
 
         member.setStatus(Status.DISPATCHED);
         memberRepository.save(member);
+    }
+
+    public void createResponse(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(() ->
+                new HttpClientErrorException(HttpStatusCode.valueOf(422), "Could not fetch member."));
+
+        callResponseRepository.save(new CallResponse(null, LocalDateTime.now(), member, null));
+
+        member.setStatus(Status.DISPATCHED);
+        memberRepository.save(member);
+
+        createCallIfEnoughResponses(member.getDepartment().getId());
+    }
+
+    private void createCallIfEnoughResponses(Long departmentId) {
+        LocalDateTime considerResponsesBefore = LocalDateTime.now().minus(AUTO_DISPATCH_WINDOW);
+        List<CallResponse> responses = callResponseRepository.findAllByMember_Department_IdAndCreatedAtAfterAndCallNull(departmentId, considerResponsesBefore);
+
+        if (responses.size() >= AUTO_DISPATCH_THRESHOLD) {
+            Call call = createFrom(departmentId, null);
+            responses.forEach(r -> {
+                r.setCall(call);
+                callResponseRepository.save(r);
+            });
+        }
     }
 
     private List<Vehicle> getVehicles(Long departmentId, List<Long> vehicleIds) {

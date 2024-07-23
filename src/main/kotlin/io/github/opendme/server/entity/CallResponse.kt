@@ -15,7 +15,7 @@ class CallResponse(
     var createdAt: LocalDateTime? = null,
     @ManyToOne(optional = false)
     var member: Member? = null,
-    @ManyToOne(cascade = [CascadeType.REMOVE], optional = false)
+    @ManyToOne(cascade = [CascadeType.REMOVE])
     var call: Call? = null
 ) {
     override fun equals(other: Any?): Boolean {

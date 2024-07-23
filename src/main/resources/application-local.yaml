@@ -15,7 +15,7 @@ spring:
             enable: true
 
 keycloak:
-  base-url: "http://0.0.0.0:9080"
+  base-url: "http://192.168.0.79:9080"
   username: admin
   password: admin
   client-secret: G9ZGhl6wrmSaA5wsNJPw7CEofv8OW7MT

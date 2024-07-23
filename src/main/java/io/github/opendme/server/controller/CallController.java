@@ -33,4 +33,11 @@ public class CallController {
     void create(@PathVariable Long callId, @RequestBody Long memberId) {
         callService.createResponse(callId, memberId);
     }
+
+    @Operation(summary = "Save the response without a call. With enough responses, a call will be created. Also sets the member to the state DISPATCHED.")
+    @PostMapping("/call/response")
+    @ResponseStatus(HttpStatus.CREATED)
+    void create(@RequestBody Long memberId) {
+        callService.createResponse(memberId);
+    }
 }

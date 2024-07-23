@@ -36,6 +36,8 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-mail")
     implementation("org.springframework:spring-context-support")
     implementation("org.springframework.boot:spring-boot-starter-thymeleaf")
+    implementation("com.google.zxing:core:3.3.0")
+    implementation("com.google.zxing:javase:3.3.0")
 
 
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")

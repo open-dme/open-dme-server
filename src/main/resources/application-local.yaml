@@ -14,6 +14,9 @@ spring:
           starttls:
             enable: true
 
+qr-code:
+  host-name: "http://192.168.0.79:8080"
+
 keycloak:
   base-url: "http://192.168.0.79:9080"
   username: admin

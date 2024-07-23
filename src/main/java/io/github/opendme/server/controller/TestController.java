@@ -22,7 +22,7 @@ public class TestController {
         if(authentication.getPrincipal() instanceof Jwt jwt) {
             return ResponseEntity.ok(new Test(
                     jwt.getClaim("email"),
-                    jwt.getClaimAsStringList("groups")
+                    authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList()
             ));
         }
         return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();

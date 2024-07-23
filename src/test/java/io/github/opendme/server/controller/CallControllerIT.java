@@ -22,8 +22,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -44,6 +42,8 @@ class CallControllerIT extends ITBase {
     private Member member;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Container
     @ServiceConnection
@@ -170,6 +170,40 @@ class CallControllerIT extends ITBase {
         assertThat(savedMember.getStatus()).isEqualTo(Status.DISPATCHED);
     }
 
+    @Test
+    @WithMockUser
+    void should_create_a_response_without_a_call() throws Exception {
+        createDepartment();
+        createMember();
+
+        MockHttpServletResponse response = sendCreateResponseRequestWith(member.getId());
+
+        assertThat(response.getStatus()).isEqualTo(201);
+        List<CallResponse> allResponse = callResponseRepository.findAll();
+        assertThat(allResponse).hasSize(1);
+        var first = allResponse.getFirst();
+        assertThat(first.getMember().getId()).isEqualTo(member.getId());
+    }
+
+    @Test
+    @WithMockUser
+    void should_create_a_call_on_many_responses_without_a_call() throws Exception {
+        createDepartment();
+        createVehicle();
+        createMember();
+        sendCreateResponseRequestWith(member.getId());
+        createMember();
+        sendCreateResponseRequestWith(member.getId());
+        createMember();
+        sendCreateResponseRequestWith(member.getId());
+
+        List<Call> calls = callRepository.findAll();
+        assertThat(calls).hasSize(1);
+        List<CallResponse> allResponse = callResponseRepository.findAll();
+        assertThat(allResponse).hasSize(3);
+        assertThat(allResponse).allMatch(r -> r.getCall().getId().equals(calls.getFirst().getId()));
+    }
+
     private void createCall() {
         createDepartment();
         createVehicle();
@@ -194,35 +228,31 @@ class CallControllerIT extends ITBase {
     }
 
     private MockHttpServletResponse sendCreateRequestWith(CallCreationDto dto) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(dto);
-
-        log.atInfo().log("Request with body: " + requestJson);
-
         return mvc.perform(
                           post("/call")
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
-                                  .content(requestJson))
+                                  .content(objectMapper.writeValueAsString(dto)))
                   .andReturn()
                   .getResponse();
     }
 
     private MockHttpServletResponse sendCreateResponseRequestWith(Long callId, Long memberId) throws Exception {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson = ow.writeValueAsString(memberId);
-
-        log.atInfo().log("Request with body: " + requestJson);
-
         return mvc.perform(
                           post("/call/{callId}/response", callId)
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
-                                  .content(requestJson))
+                                  .content(objectMapper.writeValueAsString(memberId)))
+                  .andReturn()
+                  .getResponse();
+    }
+
+    private MockHttpServletResponse sendCreateResponseRequestWith(Long memberId) throws Exception {
+        return mvc.perform(
+                          post("/call/response")
+                                  .contentType(MediaType.APPLICATION_JSON)
+                                  .with(csrf())
+                                  .content(objectMapper.writeValueAsString(memberId)))
                   .andReturn()
                   .getResponse();
     }

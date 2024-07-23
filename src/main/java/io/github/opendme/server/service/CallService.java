@@ -11,6 +11,7 @@ import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.Status;
 import io.github.opendme.server.entity.Vehicle;
 import io.github.opendme.server.entity.VehicleRepository;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.HttpClientErrorException;
@@ -24,8 +25,11 @@ import static org.springframework.util.CollectionUtils.isEmpty;
 
 @Service
 public class CallService {
-    public static final Duration AUTO_DISPATCH_WINDOW = Duration.ofMinutes(5);
-    public static final int AUTO_DISPATCH_THRESHOLD = 3;
+    @Value("${call-service.auto-dispatch-window}")
+    Duration AUTO_DISPATCH_WINDOW;
+    @Value("${call-service.auto-dispatch-threshold}")
+    int AUTO_DISPATCH_THRESHOLD;
+
     CallRepository callRepository;
     VehicleRepository vehicleRepository;
     DepartmentRepository departmentRepository;
@@ -76,7 +80,7 @@ public class CallService {
 
     private void createCallIfEnoughResponses(Long departmentId) {
         LocalDateTime considerResponsesBefore = LocalDateTime.now().minus(AUTO_DISPATCH_WINDOW);
-        List<CallResponse> responses = callResponseRepository.findAllByMember_Department_IdAndCreatedAtAfterAndCallNull(departmentId, considerResponsesBefore);
+        List<CallResponse> responses = callResponseRepository.findAllByMemberDepartmentIdAndCreatedAtAfterAndCallNull(departmentId, considerResponsesBefore);
 
         if (responses.size() >= AUTO_DISPATCH_THRESHOLD) {
             Call call = createFrom(departmentId, null);

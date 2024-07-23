@@ -6,5 +6,5 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 public interface CallResponseRepository extends JpaRepository<CallResponse, Long> {
-    List<CallResponse> findAllByMember_Department_IdAndCreatedAtAfterAndCallNull(Long id, LocalDateTime createdAt);
+    List<CallResponse> findAllByMemberDepartmentIdAndCreatedAtAfterAndCallNull(Long id, LocalDateTime createdAt);
 }

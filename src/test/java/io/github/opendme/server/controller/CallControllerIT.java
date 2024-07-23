@@ -22,8 +22,6 @@ import org.springframework.security.test.context.support.WithMockUser;
 import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectMapper;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.ObjectWriter;
-import org.testcontainers.shaded.com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
@@ -42,10 +40,10 @@ class CallControllerIT extends ITBase {
     private List<Vehicle> vehicles = new ArrayList<>();
     private Call call;
     private Member member;
-    ObjectMapper mapper;
-    ObjectWriter ow;
     @Autowired
     private DepartmentService departmentService;
+    @Autowired
+    private ObjectMapper objectMapper;
 
     @Container
     @ServiceConnection
@@ -59,10 +57,6 @@ class CallControllerIT extends ITBase {
         memberRepository.removeAllDepartments();
         departmentRepository.deleteAll();
         memberRepository.deleteAll();
-
-        mapper = new ObjectMapper();
-        mapper.configure(SerializationFeature.WRAP_ROOT_VALUE, false);
-        ow = mapper.writer().withDefaultPrettyPrinter();
     }
 
     @Test
@@ -238,7 +232,7 @@ class CallControllerIT extends ITBase {
                           post("/call")
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
-                                  .content(ow.writeValueAsString(dto)))
+                                  .content(objectMapper.writeValueAsString(dto)))
                   .andReturn()
                   .getResponse();
     }
@@ -248,7 +242,7 @@ class CallControllerIT extends ITBase {
                           post("/call/{callId}/response", callId)
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
-                                  .content(ow.writeValueAsString(memberId)))
+                                  .content(objectMapper.writeValueAsString(memberId)))
                   .andReturn()
                   .getResponse();
     }
@@ -258,7 +252,7 @@ class CallControllerIT extends ITBase {
                           post("/call/response")
                                   .contentType(MediaType.APPLICATION_JSON)
                                   .with(csrf())
-                                  .content(ow.writeValueAsString(memberId)))
+                                  .content(objectMapper.writeValueAsString(memberId)))
                   .andReturn()
                   .getResponse();
     }

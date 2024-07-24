@@ -10,6 +10,7 @@ import jakarta.annotation.security.RolesAllowed;
 import jakarta.validation.Valid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,11 +30,21 @@ public class MemberController {
     private final MemberService service;
     private final KeycloakService keycloakService;
     private final MailService mailService;
+    private final String departmentName;
+    private final String mailSubject;
 
-    public MemberController(MemberService service, KeycloakService keycloakService, MailService mailService) {
+    public MemberController(
+            MemberService service,
+            KeycloakService keycloakService,
+            MailService mailService,
+            @Value("${department.name}") String departmentName,
+            @Value("${mail.subject}") String mailSubject
+    ) {
         this.service = service;
         this.keycloakService = keycloakService;
         this.mailService = mailService;
+        this.departmentName = departmentName;
+        this.mailSubject = mailSubject;
     }
 
     @PostMapping(value = "/member", produces = "application/json;charset=UTF-8")
@@ -49,10 +60,10 @@ public class MemberController {
         templateParameter.put("email", member.getEmail());
         templateParameter.put("name", member.getName());
         templateParameter.put("password", password);
-        templateParameter.put("department", "Berlin-Mitte");
+        templateParameter.put("department", departmentName);
         mailService.sendMessageUsingThymeleafTemplate(
                 member.getEmail(),
-                "Initial Passwort Open DME",
+                mailSubject,
                 "user-created.html",
                 templateParameter
         );

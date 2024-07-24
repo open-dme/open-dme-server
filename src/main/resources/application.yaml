@@ -51,6 +51,21 @@ spring:
           starttls:
             enable: true
 
+qr-code:
+  discover-url: "${keycloak.realm-url}/.well-known/openid-configuration"
+  client-id: "${spring.security.oauth2.client.registration.open-dme.client-id}"
+  client-secret: "${spring.security.oauth2.client.registration.open-dme.client-secret}"
+  scope: "openid profile roles"
+  host-name: "http://remote.host"
+
+store-links:
+  apple: "https://www.apple.com/"
+  android: "https://play.google.com/store"
+
+department:
+  name: "Berlin-Mitte"
+mail:
+  subject: "Initial Passwort Open DME"
 
 # http://0.0.0.0:9080/realms/open-dme/.well-known/openid-configuration
 keycloak:

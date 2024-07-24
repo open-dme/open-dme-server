@@ -6,15 +6,40 @@
 <body>
 <div>
     <p>
+    <div>
         Hi <span th:text="${name}">User</span>,
+    </div>
 
-        Willkommen bei Open-DME.
-        Im Namen der Feuerwachen <span th:text="${department}">Departement</span> wurde für dich ein Account mit folgenden Logindaten  erstellt.
+    <div>
+        <div>
+            Willkommen bei Open-DME.
+        </div>
+        <div>
+            Im Namen der Feuerwachen <span th:text="${department}">Departement</span> wurde für dich ein Account mit
+            folgenden Logindaten erstellt.
 
-        <label for="email">Username:</label> <span id="email" th:text="${email}">"User"</span>
+            <h4>Scanne den Code mit der App</h4>
+            <div style="align-content: center">
+                <img src='cid:identifier1234'>
+            </div>
 
-        <label for="password">Passwort:</label> <span id="password" th:text="${password}">"Password"</span>
-    </p>
+            <div>
+                <label for="email">Username:</label> <span id="email" th:text="${email}">"User"</span>
+            </div>
+            <div>
+                <label for="password">Passwort:</label> <span id="password" th:text="${password}">"Password"</span>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h4>Die App findest du in folgenden Stores</h4>
+
+        <a th:href="${androidStoreLink}"><img src="cid:android" alt="playstore link"></a>
+        <a th:href="${appleStoreLink}"><img src="cid:apple" alt="apple app store link"></a>
+
+    </div>
+
     <p>
         Vielen Dank und viel Spaß bei der Nutzung,<br/>
         Deine Feuerwache <span th:text="${department}">"Feuerwache"</span>

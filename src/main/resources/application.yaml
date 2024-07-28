@@ -57,6 +57,7 @@ qr-code:
   client-secret: "${spring.security.oauth2.client.registration.open-dme.client-secret}"
   scope: "openid profile roles"
   host-name: "http://remote.host"
+  topic: "Open-DME-sample"
 
 store-links:
   apple: "https://www.apple.com/"
@@ -94,3 +95,6 @@ springdoc:
 call-service:
   auto-dispatch-window: PT5M
   auto-dispatch-threshold: 3
+
+fcm:
+  service-account: "classpath:firebase-service-account.json"

@@ -1,11 +1,14 @@
 package io.github.opendme;
 
+import com.google.firebase.FirebaseApp;
+import io.github.opendme.server.config.FirebaseConfig;
 import io.github.opendme.server.entity.CallRepository;
 import io.github.opendme.server.entity.CallResponseRepository;
 import io.github.opendme.server.entity.DepartmentRepository;
 import io.github.opendme.server.entity.MemberRepository;
 import io.github.opendme.server.entity.SkillRepository;
 import io.github.opendme.server.entity.VehicleRepository;
+import io.github.opendme.server.service.FirebaseNotificationService;
 import io.github.opendme.server.service.KeycloakService;
 import io.github.opendme.server.service.MailService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,5 +40,10 @@ public class ITBase {
     //Not in test scope
     @MockBean
     protected MailService mailService;
-
+    @MockBean
+    protected FirebaseNotificationService firebaseNotificationService;
+    @MockBean
+    protected FirebaseConfig firebaseConfig;
+    @MockBean
+    protected FirebaseApp firebaseApp;
 }

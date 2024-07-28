@@ -8,5 +8,6 @@ data class QrCodeConfig(
     var clientId: String,
     var clientSecret: String,
     var scope: String,
-    var hostname: String
+    var hostname: String,
+    var topic: String,
 )

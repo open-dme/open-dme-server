@@ -35,20 +35,26 @@ public class CallService {
     DepartmentRepository departmentRepository;
     CallResponseRepository callResponseRepository;
     MemberRepository memberRepository;
+    FirebaseNotificationService notificationService;
 
 
-    public CallService(CallRepository callRepository, VehicleRepository vehicleRepository, DepartmentRepository departmentRepository, CallResponseRepository callResponseRepository, MemberRepository memberRepository) {
+    public CallService(CallRepository callRepository, VehicleRepository vehicleRepository, DepartmentRepository departmentRepository, CallResponseRepository callResponseRepository, MemberRepository memberRepository, FirebaseNotificationService notificationService) {
         this.callRepository = callRepository;
         this.vehicleRepository = vehicleRepository;
         this.departmentRepository = departmentRepository;
         this.callResponseRepository = callResponseRepository;
         this.memberRepository = memberRepository;
+        this.notificationService = notificationService;
     }
 
     public Call createFrom(Long departmentId, List<Long> vehicleIds) {
         List<Vehicle> vehicles = getVehicles(departmentId, vehicleIds);
         Department department = getDepartment(departmentId);
-        return callRepository.save(new Call(null, LocalDateTime.now(), department, vehicles));
+
+        Call call = callRepository.save(new Call(null, LocalDateTime.now(), department, vehicles));
+        notificationService.alertDepartment(departmentId);
+
+        return call;
     }
 
     public void createResponse(Long callId, Long memberId) {

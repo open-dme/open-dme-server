@@ -804,7 +804,8 @@
       "secret": "**********",
       "redirectUris": [
         "/swagger-ui/oauth2-redirect.html",
-        "/login/oauth2/code/open-dme"
+        "/login/oauth2/code/open-dme",
+        "io.github.opendme://redirect"
       ],
       "webOrigins": [
         "*"

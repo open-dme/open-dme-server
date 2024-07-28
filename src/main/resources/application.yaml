@@ -52,7 +52,7 @@ spring:
             enable: true
 
 qr-code:
-  discover-url: "${keycloak.realm-url}/.well-known/openid-configuration"
+  discover-url: "${keycloak.base-url}/realms/${keycloak.realm}/.well-known/openid-configuration"
   client-id: "${spring.security.oauth2.client.registration.open-dme.client-id}"
   client-secret: "${spring.security.oauth2.client.registration.open-dme.client-secret}"
   scope: "openid profile roles"
